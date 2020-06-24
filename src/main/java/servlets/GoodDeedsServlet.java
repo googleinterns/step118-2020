@@ -37,52 +37,64 @@ import com.google.sps.Data.GoodDeed;
 
 @WebServlet("/goodDeeds")
 public class GoodDeedsServlet extends HttpServlet {
+    private static final String FALSE = "false";
+    private static final String GOOD_DEED = "GoodDeed";
+    private static final String NAME = "Name";
+    private static final String DESCRIPTION = "Description";
+    private static final String POSTED_YET = "Posted Yet";
+    private static final String TIME_STAMP = "Timestamp";
+    private static final String DEFAULT_VALUE = "";
+    private static final String CONTENT_TYPE_JSON = "application/json";
+    private static final String REDIRECT_HOMEPAGE = "/index.html";
+    
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         // Only selects postes that are marked as not being posted yet
-        Filter propertyFilter = new FilterPredicate("Posted Yet", FilterOperator.EQUAL, "false");
-        Query query = new Query("GoodDeed").setFilter(propertyFilter);
+
+        
+        Filter propertyFilter = new FilterPredicate(POSTED_YET, FilterOperator.EQUAL, FALSE;
+        Query query = new Query(GOOD_DEED).setFilter(propertyFilter);
 
         PreparedQuery results = datastore.prepare(query);
         List<GoodDeed> GoodDeeds = new ArrayList<>();
 
         for (Entity deed : results) {
             long  id =  deed.getKey().getId();
-            String title = (String) deed.getProperty("Name");
-            String description = (String) deed.getProperty("Description");
-            boolean seen = (boolean) deed.getProperty("Posted Yet");
-            long timestamp = (long) deed.getProperty("Timestamp");
+            String title = (String) deed.getProperty(NAME);
+            String description = (String) deed.getProperty(DESCRIPTION);
+            boolean posted_yet = (boolean) deed.getProperty(POSTED_YET);
+            long timestamp = (long) deed.getProperty(TIME_STAMP);
 
-            GoodDeed deedOdbject = new GoodDeed(id, title, description, seen, timestamp);
+            GoodDeed deedOdbject = new GoodDeed(id, title, description, posted_yet, timestamp);
             GoodDeeds.add(deedOdbject);
         }
 
         Gson gson = new Gson();
 
-        response.setContentType("application/json");
+        response.setContentType(CONTENT_TYPE_JSON);
         response.getWriter().println(gson.toJson(GoodDeeds));
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         
-        String name = getParameter(request, "Name", "");
-        String description = getParameter(request, "Description", "");
+        String name = getParameter(request, NAME, DEFAULT_VALUE);
+        String description = getParameter(request, DESCRIPTION, DEFAULT_VALUE);
         long timestamp = System.currentTimeMillis();
 
-        Entity deedEntity = new Entity("GoodDeed");
-        deedEntity.setProperty("Name", name);
-        deedEntity.setProperty("Description", description);
-        deedEntity.setProperty("Posted Yet", false);
-        deedEntity.setProperty("Timestamp", timestamp);
+        Entity deedEntity = new Entity(GOOD_DEED);
+        deedEntity.setProperty(NAME, name);
+        deedEntity.setProperty(DESCRIPTION, description);
+        deedEntity.setProperty(POSTED_YET, FALSE);
+        deedEntity.setProperty(TIME_STAMP, timestamp);
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         datastore.put(deedEntity);
       
-        response.sendRedirect("/index.html");
+        response.sendRedirect(REDIRECT_HOMEPAGE);
     }
 
     private String getParameter(HttpServletRequest request, String name, String defaultValue) {
