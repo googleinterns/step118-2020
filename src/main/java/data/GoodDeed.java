@@ -19,7 +19,6 @@ public class GoodDeed {
     private boolean posted_yet;
     private final long timestamp;
 
-
     public GoodDeed (long id, String title, String description, boolean posted_yet, long timestamp) {
         if (title == null) {
             throw new IllegalArgumentException("Title cannot be null");
