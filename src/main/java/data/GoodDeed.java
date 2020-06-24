@@ -13,14 +13,14 @@
 // limitations under the License.
 
 public class GoodDeed {
-    private long id;
-    private String title;
-    private String description;
-    private boolean used;
-    private long timestamp;
+    private final long id;
+    private final String title;
+    private final String description;
+    private boolean posted_yet;
+    private final long timestamp;
 
 
-    public GoodDeed (long id, String title, String description, boolean used, long timestamp) {
+    public GoodDeed (long id, String title, String description, boolean posted_yet, long timestamp) {
         if (title == null) {
             throw new IllegalArgumentException("Title cannot be null");
         }
@@ -32,7 +32,7 @@ public class GoodDeed {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.used = used;
+        this.posted_yet = posted_yet;
         this.timestamp = timestamp;
     }
 
