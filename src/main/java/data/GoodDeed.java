@@ -11,19 +11,19 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+ 
 public class GoodDeed {
     private final long id;
     private final String title;
     private final String description;
     private boolean posted_yet;
     private final long timestamp;
-
+ 
     public GoodDeed (long id, String title, String description, boolean posted_yet, long timestamp) {
         if (title == null) {
             throw new IllegalArgumentException("Title cannot be null");
         }
-
+ 
         if (description == null) {
             throw new IllegalArgumentException("Description cannot be null");
         }
@@ -34,5 +34,5 @@ public class GoodDeed {
         this.posted_yet = posted_yet;
         this.timestamp = timestamp;
     }
-
+ 
 }

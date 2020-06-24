@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+ 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -32,9 +32,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.sps.Data.GoodDeed;
-
+ 
 // Servlet that access Good Deeds Database
-
+ 
 @WebServlet("/goodDeeds")
 public class GoodDeedsServlet extends HttpServlet {
     private static final String FALSE = "false";
@@ -51,50 +51,50 @@ public class GoodDeedsServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-
+ 
         // Only selects postes that are marked as not being posted yet
         Filter propertyFilter = new FilterPredicate(POSTED_YET, FilterOperator.EQUAL, FALSE;
         Query query = new Query(GOOD_DEED).setFilter(propertyFilter);
-
+ 
         PreparedQuery results = datastore.prepare(query);
         List<GoodDeed> GoodDeeds = new ArrayList<>();
-
+ 
         for (Entity deed : results) {
             long  id =  deed.getKey().getId();
             String title = (String) deed.getProperty(NAME);
             String description = (String) deed.getProperty(DESCRIPTION);
             boolean posted_yet = (boolean) deed.getProperty(POSTED_YET);
             long timestamp = (long) deed.getProperty(TIME_STAMP);
-
+ 
             GoodDeed deedOdbject = new GoodDeed(id, title, description, posted_yet, timestamp);
             GoodDeeds.add(deedOdbject);
         }
-
+ 
         Gson gson = new Gson();
-
+ 
         response.setContentType(CONTENT_TYPE_JSON);
         response.getWriter().println(gson.toJson(GoodDeeds));
     }
-
+ 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         
         String name = getParameter(request, NAME, DEFAULT_VALUE);
         String description = getParameter(request, DESCRIPTION, DEFAULT_VALUE);
         long timestamp = System.currentTimeMillis();
-
+ 
         Entity deedEntity = new Entity(GOOD_DEED);
         deedEntity.setProperty(NAME, name);
         deedEntity.setProperty(DESCRIPTION, description);
         deedEntity.setProperty(POSTED_YET, FALSE);
         deedEntity.setProperty(TIME_STAMP, timestamp);
-
+ 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         datastore.put(deedEntity);
       
         response.sendRedirect(REDIRECT_HOMEPAGE);
     }
-
+ 
     private String getParameter(HttpServletRequest request, String name, String defaultValue) {
         String value = request.getParameter(name);
         if (value == null) {
