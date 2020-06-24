@@ -29,6 +29,7 @@ import java.util.ArrayList;
 @WebServlet("/login")
 public class Login extends HttpServlet {
 
+	// Redirects user to default page
     private static final String REDIRECT_LOGIN = "/";
     private static final String REDIRECT_LOGOUT = "/";
     
