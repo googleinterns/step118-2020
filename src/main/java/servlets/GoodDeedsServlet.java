@@ -53,8 +53,6 @@ public class GoodDeedsServlet extends HttpServlet {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         // Only selects postes that are marked as not being posted yet
-
-        
         Filter propertyFilter = new FilterPredicate(POSTED_YET, FilterOperator.EQUAL, FALSE;
         Query query = new Query(GOOD_DEED).setFilter(propertyFilter);
 
