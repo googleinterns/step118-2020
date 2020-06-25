@@ -36,7 +36,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.sps.data.GoodDeed;
  
 // Servlet that access Good Deeds Database
- 
 @WebServlet("/goodDeeds")
 public class GoodDeedsServlet extends HttpServlet {
     private static final String FALSE = "false";
@@ -49,18 +48,7 @@ public class GoodDeedsServlet extends HttpServlet {
     private static final String CONTENT_TYPE_JSON = "application/json";
     private static final String REDIRECT_HOMEPAGE = "/index.html";
     
-    /*
-    Testing:
-    JS test send a mock do post, and read it back as, verify that they're the same
-
-    Create a mock httpservlet object
-    send it through the doPost
-    send a doGet on the same object
-
-    one test
-
-    checks that it writes to the DB, and retrives it properly
-    */
+    
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         
