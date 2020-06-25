@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+package com.google.sps.servlet;
  
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -31,7 +33,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.sps.Data.GoodDeed;
+import com.google.sps.data.GoodDeed;
  
 // Servlet that access Good Deeds Database
  
@@ -47,26 +49,40 @@ public class GoodDeedsServlet extends HttpServlet {
     private static final String CONTENT_TYPE_JSON = "application/json";
     private static final String REDIRECT_HOMEPAGE = "/index.html";
     
+    /*
+    Testing:
+    JS test send a mock do post, and read it back as, verify that they're the same
+
+    Create a mock httpservlet object
+    send it through the doPost
+    send a doGet on the same object
+
+    one test
+
+    checks that it writes to the DB, and retrives it properly
+    */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  
         // Only selects postes that are marked as not being posted yet
-        Filter propertyFilter = new FilterPredicate(POSTED_YET, FilterOperator.EQUAL, FALSE;
+        Filter propertyFilter = new FilterPredicate(POSTED_YET, FilterOperator.EQUAL, FALSE);
         Query query = new Query(GOOD_DEED).setFilter(propertyFilter);
+        System.out.println(query);
  
         PreparedQuery results = datastore.prepare(query);
         List<GoodDeed> GoodDeeds = new ArrayList<>();
  
-        for (Entity deed : results) {
+        for (Entity deed : results.asIterable()) {
             long  id =  deed.getKey().getId();
             String title = (String) deed.getProperty(NAME);
             String description = (String) deed.getProperty(DESCRIPTION);
-            boolean posted_yet = (boolean) deed.getProperty(POSTED_YET);
+            String posted_yet_string = (String) deed.getProperty(POSTED_YET);
+            boolean posted_yet_bool = Boolean.parseBoolean(posted_yet_string);
             long timestamp = (long) deed.getProperty(TIME_STAMP);
  
-            GoodDeed deedOdbject = new GoodDeed(id, title, description, posted_yet, timestamp);
+            GoodDeed deedOdbject = new GoodDeed(id, title, description, posted_yet_bool, timestamp);
             GoodDeeds.add(deedOdbject);
         }
  
