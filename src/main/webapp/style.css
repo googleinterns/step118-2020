@@ -48,4 +48,14 @@
     font-family: cursive;
     font-size: 40px;
     color: deepskyblue;
+    bottom: 15px;
+}
+
+.date {
+    position: relative;
+    text-align: left;
+    font-family: sans-serif;
+    font-size: 18px;
+    left: 30px;
+    color: deepskyblue;
 }
