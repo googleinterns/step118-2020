@@ -32,3 +32,24 @@ function checkLogin() {
         }
     });
 }
+
+//Fetch Deed Object from servlet and display on index
+async function fetchDeedsFromDatabase() {
+    const DEED_TITLE_ID = "good-deed-title";
+    const DEED_DESCRIPTION_ID = "good-deed";
+    var DEED_ARRAY_INDEX_VALUE = 0;
+
+
+    const response = await fetch('/goodDeeds');
+    const json_deeds = await response.json();
+    console.log(json_deeds);
+
+    const deedTitle = document.getElementById(DEED_TITLE_ID);
+    const deedDescription = document.getElementById(DEED_DESCRIPTION_ID);
+
+    var daily_deed = json_deeds[DEED_ARRAY_INDEX_VALUE];
+    console.log(daily_deed);
+
+    deedTitle.innerText = daily_deed.title;
+    deedDescription.innerText = daily_deed.description;
+}
