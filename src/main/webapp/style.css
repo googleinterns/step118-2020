@@ -41,3 +41,11 @@
     display: none;
     color: white;
 }
+
+.goodDeed {
+    position: relative;
+    text-align: center;
+    font-family: cursive;
+    font-size: 40px;
+    color: deepskyblue;
+}
