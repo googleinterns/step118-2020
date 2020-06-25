@@ -6,21 +6,24 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body>
+  <body onload="onLoad()">
     <h1 class="heading">1Deed1Day</h1>
     <p class="paragraph">
       Welcome to 1Deed1Day! We believe small acts of kindness around the world can make a
       big impact in someone's life. Join today. 
     <p>
+
     <button onclick="fetchDeedsFromDatabase()">Fetch Deed</button>
     <div id="good-deed-title"></div>
     <div id="good-deed"></div>
-
+ 
     <form action="/goodDeeds" method="POST">
         <textarea name="Name"></textarea>
         <textarea name="Description"></textarea>
         <input type="submit"/>
     </form>
 
+    <h2><a href="" id="loginBtn" style="display: none;">Login here</a></h2>
+    <h2><a href="" id="logoutBtn" style="display: none;">Logout here</a></h2>
   </body>
 </html>
