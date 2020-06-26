@@ -26,6 +26,8 @@ import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gson.*;
 import java.io.IOException;
 import java.util.*;
@@ -39,6 +41,7 @@ import com.google.sps.data.GoodDeed;
 @WebServlet("/goodDeeds")
 public class GoodDeedsServlet extends HttpServlet {
     private static final String FALSE = "false";
+    private static final String TRUE = "true";
     private static final String GOOD_DEED = "GoodDeed";
     private static final String NAME = "Name";
     private static final String DESCRIPTION = "Description";
@@ -47,37 +50,37 @@ public class GoodDeedsServlet extends HttpServlet {
     private static final String DEFAULT_VALUE = "";
     private static final String CONTENT_TYPE_JSON = "application/json";
     private static final String REDIRECT_HOMEPAGE = "/index.html";
-    
+    private static final int MINIMUM_QUERY_LENGTH = 1;
     
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         
+        List<GoodDeed> GoodDeeds = generate_deeds_list();
+
+        if (GoodDeeds.size() < MINIMUM_QUERY_LENGTH) {
+            System.out.println("Query is below minimum size.");
+            // Resets Posted Yet property of all posted deeds
+            resetDatabase();
+            GoodDeeds = generate_deeds_list();
+        }
+
+        GoodDeed random_deed = select_random_deed(GoodDeeds);
+
+        // Marks the deed as posted
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
- 
-        // Only selects postes that are marked as not being posted yet
-        Filter propertyFilter = new FilterPredicate(POSTED_YET, FilterOperator.EQUAL, FALSE);
-        Query query = new Query(GOOD_DEED).setFilter(propertyFilter);
-        System.out.println(query);
- 
-        PreparedQuery results = datastore.prepare(query);
-        List<GoodDeed> GoodDeeds = new ArrayList<>();
- 
-        for (Entity deed : results.asIterable()) {
-            long  id =  deed.getKey().getId();
-            String title = (String) deed.getProperty(NAME);
-            String description = (String) deed.getProperty(DESCRIPTION);
-            String posted_yet_string = (String) deed.getProperty(POSTED_YET);
-            boolean posted_yet_bool = Boolean.parseBoolean(posted_yet_string);
-            long timestamp = (long) deed.getProperty(TIME_STAMP);
- 
-            GoodDeed deedOdbject = new GoodDeed(id, title, description, posted_yet_bool, timestamp);
-            GoodDeeds.add(deedOdbject);
+        try {
+            Entity deedEntity = datastore.get(random_deed.getKey());
+            deedEntity.setProperty(POSTED_YET, TRUE);
+            datastore.put(deedEntity);
+        }
+        catch (Exception e) {
+            System.out.println("Key not found");
         }
  
         Gson gson = new Gson();
  
         response.setContentType(CONTENT_TYPE_JSON);
-        response.getWriter().println(gson.toJson(GoodDeeds));
+        response.getWriter().println(gson.toJson(random_deed));
     }
  
     @Override
@@ -105,5 +108,52 @@ public class GoodDeedsServlet extends HttpServlet {
             return defaultValue;
         }
         return value;
+    }
+
+    // Randomly Selects a Good Deed Object
+    private GoodDeed select_random_deed(List<GoodDeed> GoodDeeds) {
+        Random rand = new Random();
+        return GoodDeeds.get(rand.nextInt(GoodDeeds.size()));
+    }
+
+    private void resetDatabase() {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        Filter propertyFilter = new FilterPredicate(POSTED_YET, FilterOperator.EQUAL, TRUE);
+        Query query = new Query(GOOD_DEED).setFilter(propertyFilter);
+ 
+        PreparedQuery results = datastore.prepare(query);
+ 
+        for (Entity deed : results.asIterable()) {
+            deed.setProperty(POSTED_YET, "false");
+            datastore.put(deed);
+        }
+    }
+
+    private List<GoodDeed> generate_deeds_list() {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+ 
+        // Only selects postes that are marked as not being posted yet
+        Filter propertyFilter = new FilterPredicate(POSTED_YET, FilterOperator.EQUAL, FALSE);
+        Query query = new Query(GOOD_DEED).setFilter(propertyFilter);
+        System.out.println(query);
+ 
+        PreparedQuery results = datastore.prepare(query);
+        List<GoodDeed> GoodDeeds = new ArrayList<>();
+ 
+        for (Entity deed : results.asIterable()) {
+            Key key = deed.getKey();
+            long  id =  deed.getKey().getId();
+            String title = (String) deed.getProperty(NAME);
+            String description = (String) deed.getProperty(DESCRIPTION);
+            String posted_yet_string = (String) deed.getProperty(POSTED_YET);
+            boolean posted_yet_bool = Boolean.parseBoolean(posted_yet_string);
+            long timestamp = (long) deed.getProperty(TIME_STAMP);
+ 
+            GoodDeed deedOdbject = new GoodDeed(key, id, title, description, posted_yet_bool, timestamp);
+            GoodDeeds.add(deedOdbject);
+        }
+
+        return GoodDeeds;
     }
 }
