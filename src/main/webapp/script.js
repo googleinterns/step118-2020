@@ -15,6 +15,7 @@
 // onload function when body loads
 function onLoad() {
     checkLogin();
+    displayDailyDeed();
 }
 
 // check if user is logged in and redirect correspondingly
@@ -34,7 +35,7 @@ function checkLogin() {
 }
 
 //Fetch Deed Object from servlet and display on index
-async function fetchDeedsFromDatabase() {
+async function displayDailyDeed() {
     const DEED_TITLE_ID = "good-deed-title";
     const DEED_DESCRIPTION_ID = "good-deed";
 
@@ -58,12 +59,3 @@ async function fetchDeedsFromDatabase() {
     deedTitle.innerText = daily_deed.title;
     deedDescription.innerText = daily_deed.description;
 }
-
-const hour_in_miliseconds = 3600000;
-setInterval(function() {
-    var current_time = new Date();
-    
-    if (current_time.getHours() == 0){
-        fetchDeedsFromDatabase();
-    }
-}, hour_in_miliseconds);
