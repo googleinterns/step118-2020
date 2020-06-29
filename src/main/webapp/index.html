@@ -16,9 +16,14 @@
         <a class="link" href="" id="logoutBtn">Logout here</a>
       </p>
     </h1>
-    <p class="date">
-        April 12, 2020
-    </p>
+    <p id="curDate" class="date"></p>
+    <script>
+        n =  new Date();
+        y = n.getFullYear();
+        m = n.getMonth() + 1;
+        d = n.getDate();
+        document.getElementById("curDate").innerHTML = m + "/" + d + "/" + y;
+    </script>
     <p class="goodDeed">
         Replace this area with access to the good deed database
     </p>
