@@ -23,7 +23,7 @@
 
 .authentication {
     text-align: right;
-    font-family: cursive;
+    font-family: roboto;
     font-size: 15px;
     color: white;
 }
@@ -38,7 +38,7 @@
 .goodDeed {
     position: relative;
     text-align: center;
-    font-family: cursive;
+    font-family: roboto;
     font-size: 40px;
     color: rgb(10, 132, 255);
     bottom: 15px;
