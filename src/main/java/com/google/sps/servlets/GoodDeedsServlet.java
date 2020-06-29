@@ -17,6 +17,7 @@ package com.google.sps.servlet;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -55,16 +56,27 @@ public class GoodDeedsServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         
-        List<GoodDeed> GoodDeeds = generate_deeds_list();
+        //Pulls all datastore entries
+        List<GoodDeed> GoodDeeds = PullDeedsFromDatastore();
 
-        if (GoodDeeds.size() < MINIMUM_QUERY_LENGTH) {
+        //List of deeds that haven't been posted
+        List<GoodDeed> GoodDeeds_cleaned = cleanDeeds(GoodDeeds);
+
+        if (GoodDeeds_cleaned.size() < MINIMUM_QUERY_LENGTH) {
             System.out.println("Query is below minimum size.");
+            
             // Resets Posted Yet property of all posted deeds
             resetDatabase();
-            GoodDeeds = generate_deeds_list();
+            GoodDeeds_cleaned = GoodDeeds;
+            System.out.println(GoodDeeds_cleaned);
         }
 
-        GoodDeed random_deed = select_random_deed(GoodDeeds);
+        GoodDeed random_deed = select_random_deed(GoodDeeds_cleaned);
+ 
+        Gson gson = new Gson();
+ 
+        response.setContentType(CONTENT_TYPE_JSON);
+        response.getWriter().println(gson.toJson(random_deed));
 
         // Marks the deed as posted
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -73,14 +85,9 @@ public class GoodDeedsServlet extends HttpServlet {
             deedEntity.setProperty(POSTED_YET, TRUE);
             datastore.put(deedEntity);
         }
-        catch (Exception e) {
+        catch (EntityNotFoundException e) {
             System.out.println("Key not found");
         }
- 
-        Gson gson = new Gson();
- 
-        response.setContentType(CONTENT_TYPE_JSON);
-        response.getWriter().println(gson.toJson(random_deed));
     }
  
     @Override
@@ -130,13 +137,12 @@ public class GoodDeedsServlet extends HttpServlet {
         }
     }
 
-    private List<GoodDeed> generate_deeds_list() {
+    private List<GoodDeed> PullDeedsFromDatastore() {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  
         // Only selects postes that are marked as not being posted yet
-        Filter propertyFilter = new FilterPredicate(POSTED_YET, FilterOperator.EQUAL, FALSE);
-        Query query = new Query(GOOD_DEED).setFilter(propertyFilter);
-        System.out.println(query);
+        Query query = new Query(GOOD_DEED);
+        //System.out.println(query);
  
         PreparedQuery results = datastore.prepare(query);
         List<GoodDeed> GoodDeeds = new ArrayList<>();
@@ -156,4 +162,18 @@ public class GoodDeedsServlet extends HttpServlet {
 
         return GoodDeeds;
     }
+
+    private List<GoodDeed> cleanDeeds(List<GoodDeed> deeds) {
+        List<GoodDeed> cleaned_deeds = new ArrayList<>();
+        
+        for (GoodDeed deed : deeds) {
+            if (!deed.getPosted()) {
+                cleaned_deeds.add(deed);
+            }
+        }
+
+        //System.out.println("Clean:" + cleaned_deeds);
+        return cleaned_deeds;
+    }
+    
 }

@@ -16,7 +16,6 @@ package com.google.sps.data;
 
 import com.google.appengine.api.datastore.Key;
 
- 
 public class GoodDeed {
     private final Key key;
     private final long id;
@@ -43,6 +42,10 @@ public class GoodDeed {
 
     public Key getKey() {
         return key;
+    }
+
+    public boolean getPosted() {
+        return posted_yet;
     }
  
 }
