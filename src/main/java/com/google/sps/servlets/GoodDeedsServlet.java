@@ -17,15 +17,14 @@ package com.google.sps.servlet;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.appengine.api.datastore.Query.CompositeFilter;
-import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
-import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.Key;
+
 import com.google.gson.*;
 import java.io.IOException;
 import java.util.*;
@@ -39,6 +38,7 @@ import com.google.sps.data.GoodDeed;
 @WebServlet("/goodDeeds")
 public class GoodDeedsServlet extends HttpServlet {
     private static final String FALSE = "false";
+    private static final String TRUE = "true";
     private static final String GOOD_DEED = "GoodDeed";
     private static final String NAME = "Name";
     private static final String DESCRIPTION = "Description";
@@ -47,37 +47,17 @@ public class GoodDeedsServlet extends HttpServlet {
     private static final String DEFAULT_VALUE = "";
     private static final String CONTENT_TYPE_JSON = "application/json";
     private static final String REDIRECT_HOMEPAGE = "/index.html";
-    
+    private static final String DAILY_DEED = "Daily Deed";
     
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
- 
-        // Only selects postes that are marked as not being posted yet
-        Filter propertyFilter = new FilterPredicate(POSTED_YET, FilterOperator.EQUAL, FALSE);
-        Query query = new Query(GOOD_DEED).setFilter(propertyFilter);
-        System.out.println(query);
- 
-        PreparedQuery results = datastore.prepare(query);
-        List<GoodDeed> GoodDeeds = new ArrayList<>();
- 
-        for (Entity deed : results.asIterable()) {
-            long  id =  deed.getKey().getId();
-            String title = (String) deed.getProperty(NAME);
-            String description = (String) deed.getProperty(DESCRIPTION);
-            String posted_yet_string = (String) deed.getProperty(POSTED_YET);
-            boolean posted_yet_bool = Boolean.parseBoolean(posted_yet_string);
-            long timestamp = (long) deed.getProperty(TIME_STAMP);
- 
-            GoodDeed deedOdbject = new GoodDeed(id, title, description, posted_yet_bool, timestamp);
-            GoodDeeds.add(deedOdbject);
-        }
- 
+        //Pulls all datastore entries
+        GoodDeed daily_deed = FetchDailyDeed();
+
         Gson gson = new Gson();
- 
-        response.setContentType(CONTENT_TYPE_JSON);
-        response.getWriter().println(gson.toJson(GoodDeeds));
+        response.setContentType("application/json");
+        response.getWriter().println(gson.toJson(daily_deed));
     }
  
     @Override
@@ -91,6 +71,7 @@ public class GoodDeedsServlet extends HttpServlet {
         deedEntity.setProperty(NAME, name);
         deedEntity.setProperty(DESCRIPTION, description);
         deedEntity.setProperty(POSTED_YET, FALSE);
+        deedEntity.setProperty(DAILY_DEED, FALSE);
         deedEntity.setProperty(TIME_STAMP, timestamp);
  
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -106,4 +87,29 @@ public class GoodDeedsServlet extends HttpServlet {
         }
         return value;
     }
+
+    private GoodDeed FetchDailyDeed() {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+ 
+        // Only selects daily deed
+        Filter propertyFilter = new FilterPredicate(DAILY_DEED, FilterOperator.EQUAL, TRUE);
+        Query query = new Query(GOOD_DEED).setFilter(propertyFilter);
+ 
+        PreparedQuery results = datastore.prepare(query);
+
+        Entity deed = results.asSingleEntity();
+        
+        Key key = deed.getKey();
+        long id =  deed.getKey().getId();
+        String title = (String) deed.getProperty(NAME);
+        String description = (String) deed.getProperty(DESCRIPTION);
+        String posted_yet_string = (String) deed.getProperty(POSTED_YET);
+        boolean posted_yet_bool = Boolean.parseBoolean(posted_yet_string);
+        long timestamp = (long) deed.getProperty(TIME_STAMP);
+ 
+        GoodDeed deedObject = new GoodDeed(key, id, title, description, posted_yet_bool, timestamp);
+
+        return deedObject;
+    }
+    
 }

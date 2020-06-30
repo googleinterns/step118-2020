@@ -13,15 +13,18 @@
 // limitations under the License.
 
 package com.google.sps.data;
- 
+
+import com.google.appengine.api.datastore.Key;
+
 public class GoodDeed {
+    private final Key key;
     private final long id;
     private final String title;
     private final String description;
     private boolean posted_yet;
     private final long timestamp;
  
-    public GoodDeed (long id, String title, String description, boolean posted_yet, long timestamp) {
+    public GoodDeed (Key key, long id, String title, String description, boolean posted_yet, long timestamp) {
         if (title == null) {
             throw new IllegalArgumentException("Title cannot be null");
         }
@@ -29,12 +32,20 @@ public class GoodDeed {
         if (description == null) {
             throw new IllegalArgumentException("Description cannot be null");
         }
-        
+        this.key = key;
         this.id = id;
         this.title = title;
         this.description = description;
         this.posted_yet = posted_yet;
         this.timestamp = timestamp;
+    }
+
+    public Key getKey() {
+        return key;
+    }
+
+    public boolean getPosted() {
+        return posted_yet;
     }
  
 }
