@@ -64,7 +64,6 @@ public class CronServlet extends HttpServlet {
             // Resets Posted Yet property of all posted deeds
             resetPostedYet();
             GoodDeeds_cleaned = GoodDeeds;
-            //System.out.println(GoodDeeds_cleaned);
         }
 
         // Selects a random Good Deed
@@ -104,7 +103,6 @@ public class CronServlet extends HttpServlet {
  
         // Only selects postes that are marked as not being posted yet
         Query query = new Query(GOOD_DEED);
-        //System.out.println(query);
  
         PreparedQuery results = datastore.prepare(query);
         List<GoodDeed> GoodDeeds = new ArrayList<>();

@@ -94,7 +94,6 @@ public class GoodDeedsServlet extends HttpServlet {
         // Only selects daily deed
         Filter propertyFilter = new FilterPredicate(DAILY_DEED, FilterOperator.EQUAL, TRUE);
         Query query = new Query(GOOD_DEED).setFilter(propertyFilter);
-        //System.out.println(query);
  
         PreparedQuery results = datastore.prepare(query);
 
