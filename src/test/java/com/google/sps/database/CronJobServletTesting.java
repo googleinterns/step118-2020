@@ -23,10 +23,16 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import static org.junit.Assert.assertArrayEquals;
 
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.sps.data.GoodDeed;
-import com.google.sps.servlet.CronServlet;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -39,6 +45,9 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import java.util.List;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
+import com.google.sps.data.GoodDeed;
+import com.google.sps.servlet.CronServlet;
+import java.io.IOException;
 
 @RunWith(JUnit4.class)
 public class CronJobServletTesting {
@@ -70,6 +79,7 @@ public class CronJobServletTesting {
     public void setUp() {
         cron = new CronServlet();
         helper.setUp();
+        MockitoAnnotations.initMocks(this);
     }
 
     @After
@@ -232,6 +242,44 @@ public class CronJobServletTesting {
 
         Assert.assertEquals(1, cleaned_deeds.size());
         Assert.assertEquals(deed1.getKey(), cleaned_deeds.get(0).getKey());
+    }
+    
+    @Mock
+    HttpServletRequest request;
+    @Mock
+    HttpServletResponse response;
+
+    @Test
+    public void testDoGet() throws IOException {
+        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+
+        Entity testEntity = new Entity(GOOD_DEED);
+        testEntity.setProperty(NAME, TITLE);
+        testEntity.setProperty(DESCRIPTION, DESCRIPTION_INPUT);
+        testEntity.setProperty(POSTED_YET, FALSE_STRING);
+        testEntity.setProperty(DAILY_DEED, FALSE_STRING);
+        testEntity.setProperty(TIMESTAMP, TIMESTAMP_INPUT);
+        ds.put(testEntity);
+
+        Entity testEntity2 = new Entity(GOOD_DEED);
+        testEntity2.setProperty(NAME, TITLE_2);
+        testEntity2.setProperty(DESCRIPTION, DESCRIPTION_INPUT_2);
+        testEntity2.setProperty(POSTED_YET, FALSE_STRING);
+        testEntity2.setProperty(DAILY_DEED, FALSE_STRING);
+        testEntity2.setProperty(TIMESTAMP, TIMESTAMP_INPUT);
+        ds.put(testEntity2);
+
+        cron.doGet(request, response);
+
+        Filter propertyFilter = new FilterPredicate(DAILY_DEED, FilterOperator.EQUAL, TRUE_STRING);
+        Query query = new Query(GOOD_DEED).setFilter(propertyFilter);
+
+        Assert.assertEquals(1, ds.prepare(query).countEntities(withLimit(10)));
+
+        Filter propertyFilter2 = new FilterPredicate(POSTED_YET, FilterOperator.EQUAL, TRUE_STRING);
+        Query query2 = new Query(GOOD_DEED).setFilter(propertyFilter2);
+
+        Assert.assertEquals(1, ds.prepare(query2).countEntities(withLimit(10)));
     }
 
 }
