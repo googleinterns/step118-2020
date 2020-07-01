@@ -16,23 +16,31 @@
         <a class="link" href="" id="logoutBtn">Logout here</a>
       </p>
     </h1>
-    <p id="curDate" class="date"></p>
+    <div class="date_deedContainer">
+      <p class="goodDeedTitle" id="curDate">
+      <p class="goodDeedTitle" id="good-deed-title">
+    </div>
+    <p class="goodDeed"id="good-deed">
     <script>
+        var months = new Object();
+        months[1] = "January";
+        months[2] = "February";
+        months[3] = "March";
+        months[4] = "April";
+        months[5] = "May";
+        months[6] = "June";
+        months[7] = "July";
+        months[8] = "August";
+        months[9] = "September";
+        months[10] = "October";
+        months[11] = "November";
+        months[12] = "December"; 
+
         n =  new Date();
         y = n.getFullYear();
         m = n.getMonth() + 1;
         d = n.getDate();
-        document.getElementById("curDate").innerHTML = m + "/" + d + "/" + y;
+        document.getElementById("curDate").innerHTML = months[m]+" "+d+", "+y+": ";
     </script>
-    <p class="goodDeed">
-        <div class="goodDeed" id="good-deed-title"></div>
-        <div class="goodDeed"id="good-deed"></div>
-    
-        <form action="/goodDeeds" method="POST">
-            <textarea name="Name"></textarea>
-            <textarea name="Description"></textarea>
-            <input type="submit"/>
-        </form>
-    </p>
   </body>
 </html>
