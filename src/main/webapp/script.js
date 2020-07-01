@@ -16,6 +16,7 @@
 function onLoad() {
     checkLogin();
     displayDailyDeed();
+    displayDate();
 }
 
 // check if user is logged in and redirect correspondingly
@@ -58,4 +59,32 @@ async function displayDailyDeed() {
 
     deedTitle.innerText = daily_deed.title;
     deedDescription.innerText = daily_deed.description;
+}
+
+/**
+ *displays the current date using the built in Date() class
+ */
+function displayDate() {
+    const current_date = document.getElementById("curDate");
+
+    var months = new Object();
+    months[1] = "January";
+    months[2] = "February";
+    months[3] = "March";
+    months[4] = "April";
+    months[5] = "May";
+    months[6] = "June";
+    months[7] = "July";
+    months[8] = "August";
+    months[9] = "September";
+    months[10] = "October";
+    months[11] = "November";
+    months[12] = "December"; 
+
+    var cur_date =  new Date();
+    var cur_year = cur_date.getFullYear();
+    var cur_month = cur_date.getMonth() + 1; /*The months start at 0*/
+    var cur_day = cur_date.getDate();
+
+    current_date.innerText = months[cur_month]+" "+cur_day+", "+cur_year+": ";
 }
