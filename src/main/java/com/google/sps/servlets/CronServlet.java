@@ -49,11 +49,13 @@ public class CronServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
         // Clears the Daily Deed Property for all elements
-        resetDailyDeed();
+        resetDailyDeed(datastore);
 
         // Pulls all Database Entries
-        List<GoodDeed> GoodDeeds = PullDeedsFromDatastore();
+        ArrayList<GoodDeed> GoodDeeds = PullDeedsFromDatastore(datastore);
 
         // Filters out Posted Deeds
         List<GoodDeed> GoodDeeds_cleaned = cleanDeeds(GoodDeeds);
@@ -62,7 +64,7 @@ public class CronServlet extends HttpServlet {
             System.out.println("Query is below minimum size.");
             
             // Resets Posted Yet property of all posted deeds
-            resetPostedYet();
+            resetPostedYet(datastore);
             GoodDeeds_cleaned = GoodDeeds;
         }
 
@@ -73,9 +75,7 @@ public class CronServlet extends HttpServlet {
 
     }
 
-    private void resetDailyDeed() {
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-
+    public void resetDailyDeed(DatastoreService datastore) {
         Query query = new Query(GOOD_DEED);
  
         PreparedQuery results = datastore.prepare(query);
@@ -86,8 +86,7 @@ public class CronServlet extends HttpServlet {
         }
     }
 
-    private void resetPostedYet() {
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    public void resetPostedYet(DatastoreService datastore) {
 
         Query query = new Query(GOOD_DEED);
         PreparedQuery results = datastore.prepare(query);
@@ -98,14 +97,13 @@ public class CronServlet extends HttpServlet {
         }
     }
 
-    private List<GoodDeed> PullDeedsFromDatastore() {
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    public ArrayList<GoodDeed> PullDeedsFromDatastore(DatastoreService datastore) {
  
         // Only selects postes that are marked as not being posted yet
         Query query = new Query(GOOD_DEED);
  
         PreparedQuery results = datastore.prepare(query);
-        List<GoodDeed> GoodDeeds = new ArrayList<>();
+        ArrayList<GoodDeed> GoodDeeds = new ArrayList<>();
  
         for (Entity deed : results.asIterable()) {
             Key key = deed.getKey();
@@ -123,7 +121,7 @@ public class CronServlet extends HttpServlet {
         return GoodDeeds;
     }
 
-    private void selectDailyDeed(List<GoodDeed> GoodDeeds) {
+    public void selectDailyDeed(List<GoodDeed> GoodDeeds) {
         Random rand = new Random();
         GoodDeed daily_deed = GoodDeeds.get(rand.nextInt(GoodDeeds.size()));
 
@@ -140,7 +138,7 @@ public class CronServlet extends HttpServlet {
         }
     }
 
-    private List<GoodDeed> cleanDeeds(List<GoodDeed> deeds) {
+    public List<GoodDeed> cleanDeeds(List<GoodDeed> deeds) {
         List<GoodDeed> cleaned_deeds = new ArrayList<>();
         for (GoodDeed deed : deeds) {
             if (!deed.getPosted()) {

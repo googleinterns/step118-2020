@@ -12,15 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+package com.google.sps.database;
+
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.sps.data.GoodDeed;
+import java.lang.IllegalArgumentException;
+
+
 
 @RunWith(JUnit4.class)
 public final class GoodDeedTesting {
@@ -31,19 +42,33 @@ public final class GoodDeedTesting {
     private static final String DESCRIPTION = "Deed Description";
     private static final boolean POSTED_YET = true;
     private static final long TIMESTAMP = 67890;
+
+    private final LocalServiceTestHelper helper = 
+        new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
+
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
+
+    @Before
+    public void setUp() {
+        helper.setUp();
+    }
+
+    @After
+    public void tearDown() {
+        helper.tearDown();
+    }
     
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void throwsNullName() {
         Key k1 = KeyFactory.createKey(GOOD_DEED, KEY);
         GoodDeed deed = new GoodDeed(k1, ID, null, DESCRIPTION, POSTED_YET, TIMESTAMP);
-        Assert.assertNull(deed);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void throwsNullDescription() {
         Key k1 = KeyFactory.createKey(GOOD_DEED, KEY);
         GoodDeed deed = new GoodDeed(k1, ID, TITLE, null, POSTED_YET, TIMESTAMP);
-        Assert.assertNull(deed);
     }
 
     @Test
