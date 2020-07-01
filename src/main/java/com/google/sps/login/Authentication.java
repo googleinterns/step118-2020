@@ -10,9 +10,8 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
-// limitations under the License.
 
-package com.google.sps.data;
+package com.google.sps.login;
 
 // Authentication class that stores whether the user is logged in and the redirect link
 public final class Authentication {
@@ -23,5 +22,13 @@ public final class Authentication {
     public Authentication(boolean loggedIn, String redirectLink) {
         this.loggedIn = loggedIn;
         this.redirectLink = redirectLink;
+    }
+
+    public boolean getLoggedIn() {
+        return loggedIn;
+    }
+
+    public String getRedirectLink() {
+        return redirectLink;
     }
 }
