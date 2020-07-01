@@ -1,0 +1,4 @@
+cron:
+    - description: "Choose Daily Deed"
+    - url: /cronjob
+    - schedule: every 24 hours
