@@ -15,7 +15,7 @@
 // onload function when body loads
 function onLoad() {
     checkLogin();
-    displayDailyDeed();
+    // displayDailyDeed();
 }
 
 // check if user is logged in and redirect correspondingly
