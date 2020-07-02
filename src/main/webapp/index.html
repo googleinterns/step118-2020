@@ -1,38 +1,59 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>1Deed1Day</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
-  </head>
-  <body onload="onLoad()">
-    <h1 class="heading">
-      <div class="headingCenter">1Deed1Day</div>
-      <p class="authentication">
-        <a class="link" href="" id="loginBtn">Login here</a>
-      </p>
-      <p class="authentication">
-        <a class="link" href="" id="logoutBtn">Logout here</a>
-      </p>
-    </h1>
-    <p id="curDate" class="date"></p>
+    <head>
+        <meta charset="UTF-8">
+        <title>1Deed1Day</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <link rel="stylesheet" href="style.css">
+        <script src="script.js"></script>
+    </head>
+    <body onload="onLoad()" class="background">
+        <nav class="navbar navbar-expand-lg navbar-light" style="background: none;">
+            <a class="navbar-brand" href="#">1Deed1Day</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <a class="btn btn-outline-dark my-2 my-sm-0 link" type="submit" href="" id="loginBtn" role="button">Login here</a>
+                    <a class="btn btn-outline-dark my-2 my-sm-0 link" type="submit" href="" id="logoutBtn" role="button">Logout here</a>
+                </form>
+            </div>
+        </nav>
+        <main>
+            <div class="landing">
+                <div class="card bg-light mb-3" style="width: 40em;">
+                    <div class="card-header">
+                        <p class="card-text" id="curDate" class="date"></p>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title goodDeedTitle" id="good-deed-title">Read Obama's article on How to Make this Moment the Turning Point for Real Change</h5>
+                        <h6 class="card-subtitle mb-2 text-muted" id="deed-group">General deed</h6>
+                        <p class="card-text goodDeedDes" id="good-deed">With the death of George Floyd, the US is reaching a turning point where the Black Lives Matter movement has more political leverage than it has ever had before. Read this article by former president Barack Obama to understand how to make this more than a social media spike and lead to genuine change.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a class="btn btn-outline-dark" role="button" href="#" class="card-link" id="associated-link">Associated link</a>
+                        <a class="btn btn-dark" role="button" href="#" class="card-link" id="did-deed">Did the deed!</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- jquery scripts for bootstrap -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    </body>
     <script>
         n =  new Date();
         y = n.getFullYear();
         m = n.getMonth() + 1;
         d = n.getDate();
         document.getElementById("curDate").innerHTML = m + "/" + d + "/" + y;
-    </script>
-    <p class="goodDeed">
-        <div id="good-deed-title"></div>
-        <div id="good-deed"></div>
-    
-        <form action="/goodDeeds" method="POST">
-            <textarea name="Name"></textarea>
-            <textarea name="Description"></textarea>
-            <input type="submit"/>
-        </form>
-    </p>
-  </body>
+    </script>  
 </html>
