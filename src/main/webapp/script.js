@@ -12,8 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const months = new Object();
-initializeMonths();
+const MONTHS = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November",
+    "December"
+];
 
 // onload function when body loads
 function onLoad() {
@@ -75,20 +78,5 @@ function displayDate() {
     var cur_month = cur_date.getMonth();
     var cur_day = cur_date.getDate();
 
-    current_date.innerText = months[cur_month]+" "+cur_day+", "+cur_year+": ";
-}
-
-function initializeMonths() {
-    months[0] = "January";
-    months[1] = "February";
-    months[2] = "March";
-    months[3] = "April";
-    months[4] = "May";
-    months[5] = "June";
-    months[6] = "July";
-    months[7] = "August";
-    months[8] = "September";
-    months[9] = "October";
-    months[10] = "November";
-    months[11] = "December"; 
+    current_date.innerText = MONTHS[cur_month]+" "+cur_day+", "+cur_year+": ";
 }
