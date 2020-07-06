@@ -37,6 +37,20 @@
     </dependency>
 
     <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-testing</artifactId>
+        <version>1.9.80</version>
+        <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-api-stubs</artifactId>
+        <version>1.9.80</version>
+        <scope>test</scope>
+    </dependency>
+
+    <dependency>
         <groupId>com.amihaiemil.web</groupId>
         <artifactId>eo-yaml</artifactId>
         <version>5.1.2</version>
