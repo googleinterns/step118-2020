@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.servlet;
+package com.google.sps.data.servlets;
  
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -80,7 +80,7 @@ public class GoodDeedsServlet extends HttpServlet {
         response.sendRedirect(REDIRECT_HOMEPAGE);
     }
  
-    private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    public String getParameter(HttpServletRequest request, String name, String defaultValue) {
         String value = request.getParameter(name);
         if (value == null) {
             return defaultValue;
@@ -88,7 +88,7 @@ public class GoodDeedsServlet extends HttpServlet {
         return value;
     }
 
-    private GoodDeed FetchDailyDeed() {
+    public GoodDeed FetchDailyDeed() {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  
         // Only selects daily deed

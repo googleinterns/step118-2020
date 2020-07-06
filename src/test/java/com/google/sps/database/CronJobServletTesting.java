@@ -42,12 +42,14 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
+
 import com.google.sps.data.GoodDeed;
 import com.google.sps.servlet.CronServlet;
-import java.io.IOException;
 
 @RunWith(JUnit4.class)
 public class CronJobServletTesting {
