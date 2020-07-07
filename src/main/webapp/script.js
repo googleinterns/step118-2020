@@ -12,10 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const MONTHS = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November",
+    "December"
+];
+
 // onload function when body loads
 function onLoad() {
     checkLogin();
     displayDailyDeed();
+    displayDate();
 }
 
 // check if user is logged in and redirect correspondingly
@@ -58,4 +65,18 @@ async function displayDailyDeed() {
 
     deedTitle.innerText = daily_deed.title;
     deedDescription.innerText = daily_deed.description;
+}
+
+/**
+ *displays the current date using the built in Date() class
+ */
+function displayDate() {
+    const current_date = document.getElementById("curDate");
+
+    var cur_date =  new Date();
+    var cur_year = cur_date.getFullYear();
+    var cur_month = cur_date.getMonth();
+    var cur_day = cur_date.getDate();
+
+    current_date.innerText = MONTHS[cur_month]+" "+cur_day+", "+cur_year+": ";
 }
