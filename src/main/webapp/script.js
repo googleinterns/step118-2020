@@ -55,7 +55,6 @@ async function displayDailyDeed() {
         title: (String) Input by user
         description: (String) Input by user
         posted_yet: (Boolean) Should always be false
-        link: (String) Possible Link for the Deed
         timestamp: (Number) System time, miliseconds, when the Deed was added to the database
     }
     */
