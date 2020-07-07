@@ -76,7 +76,7 @@ public class CronServlet extends HttpServlet {
 
     }
 
-    public void resetDailyDeed(DatastoreService datastore) {
+    void resetDailyDeed(DatastoreService datastore) {
         Query query = new Query(GOOD_DEED);
  
         PreparedQuery results = datastore.prepare(query);
