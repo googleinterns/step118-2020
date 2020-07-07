@@ -39,19 +39,26 @@
     position: relative;
     text-align: center;
     font-family: roboto;
-    font-size: 40px;
+    font-size: 50px;
     color: rgb(10, 132, 255);
-    bottom: 15px;
+    bottom: 45px;
 }
 
-.date {
-    position: relative;
-    text-align: left;
-    font-family: sans-serif;
+.goodDeedTitle {
+    display:inline;
+    font-family: roboto;
     font-size: 18px;
-    left: 30px;
+    text-decoration: underline;
     color: rgb(10, 132, 255);
 }
+
+.date_deedContainer {
+    position: relative;
+    text-align: left;
+    left: 30px;
+}
+
+
 
 
 
