@@ -59,6 +59,7 @@ public class GoodDeedServletTesting{
     private static final String POSTED_YET = "Posted Yet";
     private static final String DAILY_DEED = "Daily Deed";
     private static final String TIMESTAMP = "Timestamp";
+    private static final String LINK = "Link";
 
     // Property Inputs
     private static final String TITLE = "Deed Name";
@@ -103,10 +104,11 @@ public class GoodDeedServletTesting{
         testEntity.setProperty(POSTED_YET, TRUE_STRING);
         testEntity.setProperty(DAILY_DEED, TRUE_STRING);
         testEntity.setProperty(TIMESTAMP, TIMESTAMP_INPUT);
+        testEntity.setProperty(LINK, LINK);
         datastore.put(testEntity);
 
         GoodDeed expected = 
-            new GoodDeed(testEntity.getKey(), testEntity.getKey().getId(), TITLE, DESCRIPTION_INPUT, TRUE, TIMESTAMP_INPUT);
+            new GoodDeed(testEntity.getKey(), testEntity.getKey().getId(), TITLE, DESCRIPTION_INPUT, TRUE, TIMESTAMP_INPUT, LINK);
         
         GoodDeed actual = deedServlet.FetchDailyDeed();
 
@@ -158,6 +160,7 @@ public class GoodDeedServletTesting{
         testEntity.setProperty(POSTED_YET, TRUE_STRING);
         testEntity.setProperty(DAILY_DEED, TRUE_STRING);
         testEntity.setProperty(TIMESTAMP, TIMESTAMP_INPUT);
+        testEntity.setProperty(LINK, LINK);
         datastore.put(testEntity);
 
         StringWriter sw = new StringWriter();
@@ -168,7 +171,7 @@ public class GoodDeedServletTesting{
         Gson gson = new Gson();
 
         GoodDeed expected = 
-            new GoodDeed(testEntity.getKey(), testEntity.getKey().getId(), TITLE, DESCRIPTION_INPUT, TRUE, TIMESTAMP_INPUT);
+            new GoodDeed(testEntity.getKey(), testEntity.getKey().getId(), TITLE, DESCRIPTION_INPUT, TRUE, TIMESTAMP_INPUT, LINK);
         
         deedServlet.doGet(request, response);
         String actual = sw.getBuffer().toString().trim();

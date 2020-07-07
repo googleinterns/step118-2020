@@ -60,6 +60,7 @@ public class CronJobServletTesting {
     private static final String POSTED_YET = "Posted Yet";
     private static final String DAILY_DEED = "Daily Deed";
     private static final String TIMESTAMP = "Timestamp";
+    private static final String LINK = "Link";
 
     // Property Inputs
     private static final String TITLE = "Deed Name";
@@ -136,6 +137,7 @@ public class CronJobServletTesting {
         testEntity.setProperty(POSTED_YET, FALSE_STRING);
         testEntity.setProperty(DAILY_DEED, FALSE_STRING);
         testEntity.setProperty(TIMESTAMP, TIMESTAMP_INPUT);
+        testEntity.setProperty(LINK, LINK);
         ds.put(testEntity);
 
         Entity testEntity2 = new Entity(GOOD_DEED);
@@ -144,12 +146,13 @@ public class CronJobServletTesting {
         testEntity2.setProperty(POSTED_YET, FALSE_STRING);
         testEntity2.setProperty(DAILY_DEED, FALSE_STRING);
         testEntity2.setProperty(TIMESTAMP, TIMESTAMP_INPUT);
+        testEntity2.setProperty(LINK, LINK);
         ds.put(testEntity2);
 
         GoodDeed deed1 = 
-            new GoodDeed(testEntity.getKey(), testEntity.getKey().getId(), TITLE, DESCRIPTION_INPUT, FALSE, TIMESTAMP_INPUT);
+            new GoodDeed(testEntity.getKey(), testEntity.getKey().getId(), TITLE, DESCRIPTION_INPUT, FALSE, TIMESTAMP_INPUT, LINK);
         GoodDeed deed2 = 
-            new GoodDeed(testEntity2.getKey(), testEntity2.getKey().getId(), TITLE_2, DESCRIPTION_INPUT_2, FALSE, TIMESTAMP_INPUT);
+            new GoodDeed(testEntity2.getKey(), testEntity2.getKey().getId(), TITLE_2, DESCRIPTION_INPUT_2, FALSE, TIMESTAMP_INPUT, LINK);
 
         ArrayList<GoodDeed> actual = cron.PullDeedsFromDatastore(ds);
 
@@ -170,6 +173,7 @@ public class CronJobServletTesting {
         testEntity.setProperty(POSTED_YET, FALSE_STRING);
         testEntity.setProperty(DAILY_DEED, FALSE_STRING);
         testEntity.setProperty(TIMESTAMP, TIMESTAMP_INPUT);
+        testEntity.setProperty(LINK, LINK);
         ds.put(testEntity);
 
         Entity testEntity2 = new Entity(GOOD_DEED);
@@ -178,12 +182,13 @@ public class CronJobServletTesting {
         testEntity2.setProperty(POSTED_YET, FALSE_STRING);
         testEntity2.setProperty(DAILY_DEED, FALSE_STRING);
         testEntity2.setProperty(TIMESTAMP, TIMESTAMP_INPUT);
+        testEntity2.setProperty(LINK, LINK);
         ds.put(testEntity2);
 
         GoodDeed deed1 = 
-            new GoodDeed(testEntity.getKey(), testEntity.getKey().getId(), TITLE, DESCRIPTION_INPUT, FALSE, TIMESTAMP_INPUT);
+            new GoodDeed(testEntity.getKey(), testEntity.getKey().getId(), TITLE, DESCRIPTION_INPUT, FALSE, TIMESTAMP_INPUT, LINK);
         GoodDeed deed2 = 
-            new GoodDeed(testEntity2.getKey(), testEntity2.getKey().getId(), TITLE_2, DESCRIPTION_INPUT_2, FALSE, TIMESTAMP_INPUT);
+            new GoodDeed(testEntity2.getKey(), testEntity2.getKey().getId(), TITLE_2, DESCRIPTION_INPUT_2, FALSE, TIMESTAMP_INPUT, LINK);
         
         List<GoodDeed> deeds = new ArrayList<>();
         deeds.add(deed1);
@@ -219,6 +224,7 @@ public class CronJobServletTesting {
         testEntity.setProperty(POSTED_YET, FALSE_STRING);
         testEntity.setProperty(DAILY_DEED, FALSE_STRING);
         testEntity.setProperty(TIMESTAMP, TIMESTAMP_INPUT);
+        testEntity.setProperty(LINK, LINK);
         ds.put(testEntity);
 
         Entity testEntity2 = new Entity(GOOD_DEED);
@@ -227,14 +233,15 @@ public class CronJobServletTesting {
         testEntity2.setProperty(POSTED_YET, FALSE_STRING);
         testEntity2.setProperty(DAILY_DEED, FALSE_STRING);
         testEntity2.setProperty(TIMESTAMP, TIMESTAMP_INPUT);
+        testEntity2.setProperty(LINK, LINK);
         ds.put(testEntity2);
 
         // Posted Yet = false
         GoodDeed deed1 = 
-            new GoodDeed(testEntity.getKey(), testEntity.getKey().getId(), TITLE, DESCRIPTION_INPUT, FALSE, TIMESTAMP_INPUT);
+            new GoodDeed(testEntity.getKey(), testEntity.getKey().getId(), TITLE, DESCRIPTION_INPUT, FALSE, TIMESTAMP_INPUT, LINK);
         // Posted Yet = true
         GoodDeed deed2 = 
-            new GoodDeed(testEntity2.getKey(), testEntity2.getKey().getId(), TITLE_2, DESCRIPTION_INPUT_2, TRUE, TIMESTAMP_INPUT);
+            new GoodDeed(testEntity2.getKey(), testEntity2.getKey().getId(), TITLE_2, DESCRIPTION_INPUT_2, TRUE, TIMESTAMP_INPUT, LINK);
         
         List<GoodDeed> deeds = new ArrayList<>();
         deeds.add(deed1);
@@ -261,6 +268,7 @@ public class CronJobServletTesting {
         testEntity.setProperty(POSTED_YET, FALSE_STRING);
         testEntity.setProperty(DAILY_DEED, FALSE_STRING);
         testEntity.setProperty(TIMESTAMP, TIMESTAMP_INPUT);
+        testEntity.setProperty(LINK, LINK);
         ds.put(testEntity);
 
         Entity testEntity2 = new Entity(GOOD_DEED);
@@ -269,6 +277,7 @@ public class CronJobServletTesting {
         testEntity2.setProperty(POSTED_YET, FALSE_STRING);
         testEntity2.setProperty(DAILY_DEED, FALSE_STRING);
         testEntity2.setProperty(TIMESTAMP, TIMESTAMP_INPUT);
+        testEntity2.setProperty(LINK, LINK);
         ds.put(testEntity2);
 
         cron.doGet(request, response);

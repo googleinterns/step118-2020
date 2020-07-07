@@ -23,7 +23,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
@@ -41,6 +40,7 @@ public final class GoodDeedTesting {
     private static final String TITLE = "Deed Name";
     private static final String DESCRIPTION = "Deed Description";
     private static final boolean POSTED_YET = true;
+    private static final String LINK = "Link";
     private static final long TIMESTAMP = 67890;
 
     private final LocalServiceTestHelper helper = 
@@ -62,19 +62,24 @@ public final class GoodDeedTesting {
     @Test(expected = IllegalArgumentException.class)
     public void throwsNullName() {
         Key k1 = KeyFactory.createKey(GOOD_DEED, KEY);
-        GoodDeed deed = new GoodDeed(k1, ID, null, DESCRIPTION, POSTED_YET, TIMESTAMP);
+        GoodDeed deed = new GoodDeed(k1, ID, null, DESCRIPTION, POSTED_YET, TIMESTAMP, LINK);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void throwsNullDescription() {
         Key k1 = KeyFactory.createKey(GOOD_DEED, KEY);
-        GoodDeed deed = new GoodDeed(k1, ID, TITLE, null, POSTED_YET, TIMESTAMP);
+        GoodDeed deed = new GoodDeed(k1, ID, TITLE, null, POSTED_YET, TIMESTAMP, LINK);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void throwsNullLink() {
+        Key k1 = KeyFactory.createKey(GOOD_DEED, KEY);
+        GoodDeed deed = new GoodDeed(k1, ID, TITLE, DESCRIPTION, POSTED_YET, TIMESTAMP, null);
+    }
     @Test
     public void testGetKey() {
         Key k1 = KeyFactory.createKey(GOOD_DEED, KEY);
-        GoodDeed deed = new GoodDeed(k1, ID, TITLE, DESCRIPTION, POSTED_YET, TIMESTAMP);
+        GoodDeed deed = new GoodDeed(k1, ID, TITLE, DESCRIPTION, POSTED_YET, TIMESTAMP, LINK);
         Key actual = deed.getKey();
 
         Assert.assertEquals(k1, actual);
@@ -83,7 +88,7 @@ public final class GoodDeedTesting {
     @Test
     public void testGetPosted() {
         Key k1 = KeyFactory.createKey(GOOD_DEED, KEY);
-        GoodDeed deed = new GoodDeed(k1, ID, TITLE, DESCRIPTION, POSTED_YET, TIMESTAMP);
+        GoodDeed deed = new GoodDeed(k1, ID, TITLE, DESCRIPTION, POSTED_YET, TIMESTAMP, LINK);
         boolean actual = deed.getPosted();
 
         Assert.assertEquals(POSTED_YET, actual);

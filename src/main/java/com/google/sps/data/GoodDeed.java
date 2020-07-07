@@ -23,8 +23,9 @@ public class GoodDeed {
     private final String description;
     private boolean posted_yet;
     private final long timestamp;
+    private final String link;
  
-    public GoodDeed (Key key, long id, String title, String description, boolean posted_yet, long timestamp) {
+    public GoodDeed (Key key, long id, String title, String description, boolean posted_yet, long timestamp, String link) {
         if (title == null) {
             throw new IllegalArgumentException("Title cannot be null");
         }
@@ -32,12 +33,16 @@ public class GoodDeed {
         if (description == null) {
             throw new IllegalArgumentException("Description cannot be null");
         }
+        if (link == null) {
+            throw new IllegalArgumentException("Link cannot be null");
+        }
         this.key = key;
         this.id = id;
         this.title = title;
         this.description = description;
         this.posted_yet = posted_yet;
         this.timestamp = timestamp;
+        this.link = link;
     }
 
     public Key getKey() {

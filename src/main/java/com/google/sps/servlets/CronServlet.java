@@ -41,6 +41,7 @@ public class CronServlet extends HttpServlet {
     private static final String POSTED_YET = "Posted Yet";
     private static final String TIME_STAMP = "Timestamp";
     private static final String DAILY_DEED = "Daily Deed";
+    private static final String LINK = "Link";
     private static final String GOOD_DEED = "GoodDeed";
     private static final String FALSE = "false";
     private static final String TRUE = "true";
@@ -112,9 +113,10 @@ public class CronServlet extends HttpServlet {
             String description = (String) deed.getProperty(DESCRIPTION);
             String posted_yet_string = (String) deed.getProperty(POSTED_YET);
             boolean posted_yet_bool = Boolean.parseBoolean(posted_yet_string);
+            String link = (String) deed.getProperty(LINK);
             long timestamp = (long) deed.getProperty(TIME_STAMP);
  
-            GoodDeed deedObject = new GoodDeed(key, id, title, description, posted_yet_bool, timestamp);
+            GoodDeed deedObject = new GoodDeed(key, id, title, description, posted_yet_bool, timestamp, link);
             GoodDeeds.add(deedObject);
         }
 

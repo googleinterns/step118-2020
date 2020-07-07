@@ -43,6 +43,7 @@ public class GoodDeedsServlet extends HttpServlet {
     private static final String NAME = "Name";
     private static final String DESCRIPTION = "Description";
     private static final String POSTED_YET = "Posted Yet";
+    private static final String LINK = "Link";
     private static final String TIME_STAMP = "Timestamp";
     private static final String DEFAULT_VALUE = "";
     private static final String CONTENT_TYPE_JSON = "application/json";
@@ -65,6 +66,7 @@ public class GoodDeedsServlet extends HttpServlet {
         
         String name = getParameter(request, NAME, DEFAULT_VALUE);
         String description = getParameter(request, DESCRIPTION, DEFAULT_VALUE);
+        String link = getParameter(request, LINK, DEFAULT_VALUE);
         long timestamp = System.currentTimeMillis();
  
         Entity deedEntity = new Entity(GOOD_DEED);
@@ -72,6 +74,7 @@ public class GoodDeedsServlet extends HttpServlet {
         deedEntity.setProperty(DESCRIPTION, description);
         deedEntity.setProperty(POSTED_YET, FALSE);
         deedEntity.setProperty(DAILY_DEED, FALSE);
+        deedEntity.setProperty(LINK, link);
         deedEntity.setProperty(TIME_STAMP, timestamp);
  
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -105,9 +108,10 @@ public class GoodDeedsServlet extends HttpServlet {
         String description = (String) deed.getProperty(DESCRIPTION);
         String posted_yet_string = (String) deed.getProperty(POSTED_YET);
         boolean posted_yet_bool = Boolean.parseBoolean(posted_yet_string);
+        String link = (String) deed.getProperty(LINK);
         long timestamp = (long) deed.getProperty(TIME_STAMP);
  
-        GoodDeed deedObject = new GoodDeed(key, id, title, description, posted_yet_bool, timestamp);
+        GoodDeed deedObject = new GoodDeed(key, id, title, description, posted_yet_bool, timestamp, link);
 
         return deedObject;
     }
