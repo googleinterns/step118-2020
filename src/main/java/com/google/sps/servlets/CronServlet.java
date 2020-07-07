@@ -56,7 +56,7 @@ public class CronServlet extends HttpServlet {
         resetDailyDeed(datastore);
 
         // Pulls all Database Entries
-        ArrayList<GoodDeed> GoodDeeds = PullDeedsFromDatastore(datastore);
+        ArrayList<GoodDeed> GoodDeeds = pullDeedsFromDatastore(datastore);
 
         // Filters out Posted Deeds
         List<GoodDeed> GoodDeeds_cleaned = cleanDeeds(GoodDeeds);
@@ -87,7 +87,8 @@ public class CronServlet extends HttpServlet {
         }
     }
 
-    public void resetPostedYet(DatastoreService datastore) {
+    @VisibleForTesting
+    void resetPostedYet(DatastoreService datastore) {
 
         Query query = new Query(GOOD_DEED);
         PreparedQuery results = datastore.prepare(query);
@@ -98,7 +99,8 @@ public class CronServlet extends HttpServlet {
         }
     }
 
-    public ArrayList<GoodDeed> PullDeedsFromDatastore(DatastoreService datastore) {
+    @VisibleForTesting
+    ArrayList<GoodDeed> pullDeedsFromDatastore(DatastoreService datastore) {
  
         // Only selects postes that are marked as not being posted yet
         Query query = new Query(GOOD_DEED);
@@ -123,7 +125,8 @@ public class CronServlet extends HttpServlet {
         return GoodDeeds;
     }
 
-    public void selectDailyDeed(List<GoodDeed> GoodDeeds) {
+    @VisibleForTesting
+    void selectDailyDeed(List<GoodDeed> GoodDeeds) {
         Random rand = new Random();
         GoodDeed daily_deed = GoodDeeds.get(rand.nextInt(GoodDeeds.size()));
 
@@ -140,7 +143,8 @@ public class CronServlet extends HttpServlet {
         }
     }
 
-    public List<GoodDeed> cleanDeeds(List<GoodDeed> deeds) {
+    @VisibleForTesting
+    List<GoodDeed> cleanDeeds(List<GoodDeed> deeds) {
         List<GoodDeed> cleaned_deeds = new ArrayList<>();
         for (GoodDeed deed : deeds) {
             if (!deed.getPosted()) {

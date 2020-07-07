@@ -83,7 +83,8 @@ public class GoodDeedsServlet extends HttpServlet {
         response.sendRedirect(REDIRECT_HOMEPAGE);
     }
  
-    public String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    @VisibleForTesting
+    String getParameter(HttpServletRequest request, String name, String defaultValue) {
         String value = request.getParameter(name);
         if (value == null) {
             return defaultValue;
@@ -91,7 +92,8 @@ public class GoodDeedsServlet extends HttpServlet {
         return value;
     }
 
-    public GoodDeed FetchDailyDeed() {
+    @VisibleForTesting
+    GoodDeed FetchDailyDeed() {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  
         // Only selects daily deed
