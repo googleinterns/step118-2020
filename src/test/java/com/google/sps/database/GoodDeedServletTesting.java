@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package com.google.sps.database;
+package com.google.sps.testing;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -42,8 +42,8 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
-import com.google.sps.data.GoodDeed;
-import com.google.sps.data.servlets.GoodDeedsServlet;
+import com.google.sps.testing.GoodDeed;
+import com.google.sps.testing.GoodDeedsServlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -110,7 +110,7 @@ public class GoodDeedServletTesting{
         GoodDeed expected = 
             new GoodDeed(testEntity.getKey(), testEntity.getKey().getId(), TITLE, DESCRIPTION_INPUT, TRUE, TIMESTAMP_INPUT, LINK);
         
-        GoodDeed actual = deedServlet.FetchDailyDeed();
+        GoodDeed actual = deedServlet.fetchDailyDeed();
 
         Assert.assertEquals(expected.getKey(), actual.getKey());
         

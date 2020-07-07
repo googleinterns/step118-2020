@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.database;
+package com.google.sps.testing;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,7 +27,8 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import com.google.sps.data.GoodDeed;
+
+import com.google.sps.testing.GoodDeed;
 import java.lang.IllegalArgumentException;
 
 

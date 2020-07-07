@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.servlet;
+package com.google.sps.testing;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -31,7 +31,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.sps.data.GoodDeed;
+import com.google.sps.testing.GoodDeed;
 
 
 @WebServlet("/cronjob")
@@ -87,7 +87,6 @@ public class CronServlet extends HttpServlet {
         }
     }
 
-    @VisibleForTesting
     void resetPostedYet(DatastoreService datastore) {
 
         Query query = new Query(GOOD_DEED);
@@ -99,7 +98,6 @@ public class CronServlet extends HttpServlet {
         }
     }
 
-    @VisibleForTesting
     ArrayList<GoodDeed> pullDeedsFromDatastore(DatastoreService datastore) {
  
         // Only selects postes that are marked as not being posted yet
@@ -125,7 +123,6 @@ public class CronServlet extends HttpServlet {
         return GoodDeeds;
     }
 
-    @VisibleForTesting
     void selectDailyDeed(List<GoodDeed> GoodDeeds) {
         Random rand = new Random();
         GoodDeed daily_deed = GoodDeeds.get(rand.nextInt(GoodDeeds.size()));
@@ -143,7 +140,6 @@ public class CronServlet extends HttpServlet {
         }
     }
 
-    @VisibleForTesting
     List<GoodDeed> cleanDeeds(List<GoodDeed> deeds) {
         List<GoodDeed> cleaned_deeds = new ArrayList<>();
         for (GoodDeed deed : deeds) {

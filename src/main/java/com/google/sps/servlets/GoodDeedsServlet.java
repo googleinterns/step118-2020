@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.data.servlets;
+package com.google.sps.testing;
  
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -32,7 +32,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.sps.data.GoodDeed;
+import com.google.sps.testing.GoodDeed;
  
 // Servlet that access Good Deeds Database
 @WebServlet("/goodDeeds")
@@ -54,7 +54,7 @@ public class GoodDeedsServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         
         //Pulls all datastore entries
-        GoodDeed daily_deed = FetchDailyDeed();
+        GoodDeed daily_deed = fetchDailyDeed();
 
         Gson gson = new Gson();
         response.setContentType("application/json");
@@ -82,8 +82,7 @@ public class GoodDeedsServlet extends HttpServlet {
       
         response.sendRedirect(REDIRECT_HOMEPAGE);
     }
- 
-    @VisibleForTesting
+
     String getParameter(HttpServletRequest request, String name, String defaultValue) {
         String value = request.getParameter(name);
         if (value == null) {
@@ -92,8 +91,7 @@ public class GoodDeedsServlet extends HttpServlet {
         return value;
     }
 
-    @VisibleForTesting
-    GoodDeed FetchDailyDeed() {
+    GoodDeed fetchDailyDeed() {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  
         // Only selects daily deed

@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package com.google.sps.database;
+package com.google.sps.testing;
 
 import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
 
@@ -48,8 +48,8 @@ import java.util.List;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
 
-import com.google.sps.data.GoodDeed;
-import com.google.sps.servlet.CronServlet;
+import com.google.sps.testing.GoodDeed;
+import com.google.sps.testing.CronServlet;
 
 @RunWith(JUnit4.class)
 public class CronJobServletTesting {
@@ -154,7 +154,7 @@ public class CronJobServletTesting {
         GoodDeed deed2 = 
             new GoodDeed(testEntity2.getKey(), testEntity2.getKey().getId(), TITLE_2, DESCRIPTION_INPUT_2, FALSE, TIMESTAMP_INPUT, LINK);
 
-        ArrayList<GoodDeed> actual = cron.PullDeedsFromDatastore(ds);
+        ArrayList<GoodDeed> actual = cron.pullDeedsFromDatastore(ds);
 
         Assert.assertEquals(2, actual.size());
 
