@@ -44,6 +44,15 @@
     bottom: 45px;
 }
 
+.goodDeedDes {
+    position: relative;
+    text-align: center;
+    font-family: roboto;
+    font-size: 18px;
+    color: rgb(10, 132, 255);
+    bottom: 45px;
+}
+
 .goodDeedTitle {
     display:inline;
     font-family: roboto;
