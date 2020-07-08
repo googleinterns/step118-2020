@@ -1,4 +1,4 @@
 cron:
-    - description: "Choose Daily Deed"
-    - url: /cronjob
-    - schedule: every 24 hours
+- description: "Selects Daily Deed"
+  url: /cronjob
+  schedule: every 24 hours
