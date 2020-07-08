@@ -103,7 +103,7 @@ public class CronJobServletTesting {
 
         Assert.assertEquals(1, ds.prepare(query).countEntities(withLimit(10)));
 
-        cron.resetDailyDeed(ds);
+        cron.resetDailyDeed();
 
         Assert.assertEquals(0, ds.prepare(query).countEntities(withLimit(10)));
     }
@@ -154,7 +154,7 @@ public class CronJobServletTesting {
         GoodDeed deed2 = 
             new GoodDeed(testEntity2.getKey(), testEntity2.getKey().getId(), TITLE_2, DESCRIPTION_INPUT_2, FALSE, TIMESTAMP_INPUT, LINK);
 
-        ArrayList<GoodDeed> actual = cron.pullDeedsFromDatastore(ds);
+        List<GoodDeed> actual = cron.pullDeedsFromDatastore(ds);
 
         Assert.assertEquals(2, actual.size());
 
@@ -196,7 +196,7 @@ public class CronJobServletTesting {
 
         // Reset Daily Deed and Posted Yet
         cron.resetPostedYet(ds);
-        cron.resetDailyDeed(ds);
+        cron.resetDailyDeed();
         
         // Function call
         cron.selectDailyDeed(deeds);

@@ -42,18 +42,19 @@ public class CronServlet extends HttpServlet {
     private static final String TIME_STAMP = "Timestamp";
     private static final String DAILY_DEED = "Daily Deed";
     private static final String GOOD_DEED = "GoodDeed";
+    private static final String LINK = "Link";
     private static final String FALSE = "false";
     private static final String TRUE = "true";
     private static final int MINIMUM_QUERY_LENGTH = 1;
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         // Clears the Daily Deed Property for all elements
         resetDailyDeed();
 
         // Pulls all Database Entries
-        List<GoodDeed> GoodDeeds = PullDeedsFromDatastore();
+        List<GoodDeed> GoodDeeds = pullDeedsFromDatastore(datastore);
 
         // Filters out Posted Deeds
         List<GoodDeed> GoodDeeds_cleaned = cleanDeeds(GoodDeeds);
@@ -62,7 +63,7 @@ public class CronServlet extends HttpServlet {
             System.out.println("Query is below minimum size.");
             
             // Resets Posted Yet property of all posted deeds
-            resetPostedYet();
+            resetPostedYet(datastore);
             GoodDeeds_cleaned = GoodDeeds;
         }
 
@@ -73,7 +74,7 @@ public class CronServlet extends HttpServlet {
 
     }
 
-    private void resetDailyDeed() {
+    void resetDailyDeed() {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         Query query = new Query(GOOD_DEED);
@@ -96,7 +97,7 @@ public class CronServlet extends HttpServlet {
         }
     }
 
-    ArrayList<GoodDeed> pullDeedsFromDatastore(DatastoreService datastore) {
+    List<GoodDeed> pullDeedsFromDatastore(DatastoreService datastore) {
  
         // Only selects postes that are marked as not being posted yet
         Query query = new Query(GOOD_DEED);
@@ -112,8 +113,9 @@ public class CronServlet extends HttpServlet {
             String posted_yet_string = (String) deed.getProperty(POSTED_YET);
             boolean posted_yet_bool = Boolean.parseBoolean(posted_yet_string);
             long timestamp = (long) deed.getProperty(TIME_STAMP);
- 
-            GoodDeed deedObject = new GoodDeed(key, id, title, description, posted_yet_bool, timestamp);
+            String link = (String) deed.getProperty(LINK);
+
+            GoodDeed deedObject = new GoodDeed(key, id, title, description, posted_yet_bool, timestamp, link);
             GoodDeeds.add(deedObject);
         }
 
