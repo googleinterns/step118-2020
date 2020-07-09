@@ -22,9 +22,12 @@ function onLoad() {
 function checkLogin() {
     fetch('/login').then(response => response.json()).then((login) => {
         if (login.loggedIn) {
+            // don't show logout button
+            /*
             document.getElementById('loginBtn').style.display = 'none';
             document.getElementById('logoutBtn').style.display = 'block';
             document.getElementById('logoutBtn').href = login.redirectLink;
+            */
         }
         else {
             document.getElementById('loginBtn').href = login.redirectLink;
