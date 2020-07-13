@@ -44,7 +44,6 @@ import java.io.IOException;
 @WebServlet("/comments")
 public class CommentServlet extends HttpServlet {
  
-    private List<Comment> comments = new ArrayList<>();
     private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private Gson gson = new Gson();
  
@@ -56,10 +55,8 @@ public class CommentServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
         Query query = new Query("Comments").addSort("timestamp", SortDirection.DESCENDING);
         PreparedQuery userComments = datastore.prepare(query);
- 
-        comments.clear(); 
-        /*Since the comments ArrayList is a class variable, we clear it here so that 
-        comments do not duplicate everytime this method is called*/
+  
+        List<Comment> comments = new ArrayList<>();
  
         for (Entity curComment : userComments.asIterable()) {
             long id = curComment.getKey().getId();
