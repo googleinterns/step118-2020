@@ -23,6 +23,7 @@ function onLoad() {
     checkLogin();
     displayDailyDeed();
     displayDate();
+    getComments();
 }
 
 // check if user is logged in and redirect correspondingly
@@ -82,4 +83,29 @@ function displayDate() {
     var cur_day = cur_date.getDate();
 
     current_date.innerText = MONTHS[cur_month]+" "+cur_day+", "+cur_year+": ";
+}
+
+/**
+ *gets the comments, stored as a Json, and displays them to the webapp
+ */
+function getComments() {
+    fetch('/comments').then(response => response.json()).then((userComments) => {
+ 
+        const commentsListElement = document.getElementById('comment-container');
+        commentsListElement.innerHTML = '';
+ 
+        for (x in userComments) {
+            commentsListElement.appendChild(createListElement(userComments[x].comment));
+        }
+        
+    });
+}
+ 
+/** 
+ *Creates an <li> element containing text.
+ */
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
 }
