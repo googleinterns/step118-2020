@@ -33,7 +33,6 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
  
 import com.google.gson.Gson;
  
@@ -57,14 +56,11 @@ public class CommentServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
         Entity currentDeed = getCurrentDeed();
-        Collection userComments = (Collection) currentDeed.getProperty("Comments");
-        Iterator<String> commentsIterator = userComments.iterator();
+        List userComments = (List) currentDeed.getProperty("Comments");
   
         List<String> comments = new ArrayList<>();
 
-        while (commentsIterator.hasNext()) {
-            comments.add(commentsIterator.next());
-        }
+        comments.addAll(userComments);
         
         response.setContentType("application/json;");       
         response.getWriter().println(gson.toJson(comments));
@@ -89,14 +85,14 @@ public class CommentServlet extends HttpServlet {
      */
     private void addComment(String newComment) {
         Entity currentDeed = getCurrentDeed();
-        Collection userComments = (Collection) currentDeed.getProperty("Comments");
+        //Collection userComments = (Collection) currentDeed.getProperty("Comments");
+        List userComments = (List) currentDeed.getProperty("Comments");
 
         if (userComments == null || userComments.isEmpty()) {
             userComments = new ArrayList<>();
-            userComments.add(newComment);
-        } else {
-            userComments.add(newComment);
         }
+        
+        userComments.add(newComment);
 
         currentDeed.setProperty("Comments", userComments);
         datastore.put(currentDeed);

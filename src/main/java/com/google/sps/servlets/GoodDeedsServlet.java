@@ -69,7 +69,7 @@ public class GoodDeedsServlet extends HttpServlet {
         String description = getParameter(request, DESCRIPTION, DEFAULT_VALUE);
         String link = getParameter(request, LINK, DEFAULT_VALUE);
         long timestamp = System.currentTimeMillis();
-        Collection<String> comments = new ArrayList<>();
+        List<String> comments = new ArrayList<>();
  
         Entity deedEntity = new Entity(GOOD_DEED);
         deedEntity.setProperty(NAME, name);
