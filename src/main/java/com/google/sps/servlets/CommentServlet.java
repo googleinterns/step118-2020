@@ -32,7 +32,6 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
  
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collection;
  
 import com.google.gson.Gson;
  
