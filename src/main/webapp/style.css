@@ -53,6 +53,11 @@
     bottom: 45px;
 }
 
+.content {
+    width: 700px;
+    margin: auto;
+}
+
 .goodDeedTitle {
     display:inline;
     font-family: roboto;
@@ -67,16 +72,6 @@
     left: 30px;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+main {
+  padding-top: 65px;
+}

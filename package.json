@@ -1,0 +1,17 @@
+{
+    "name": "step118-2020",
+    "repository": "github:googleinterns/step118-2020",
+    "scripts": {
+        "test": "jest"
+    },
+    "devDependencies": {
+        "jest": "^26.0",
+        "jest-fetch-mock": "^3.0.3"
+    },
+    "jest": {
+        "automock": false,
+        "setupFiles": [
+            "./setupJest.js"
+        ]
+    }
+}
