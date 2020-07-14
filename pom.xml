@@ -37,6 +37,20 @@
     </dependency>
 
     <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-testing</artifactId>
+        <version>1.9.80</version>
+        <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-api-stubs</artifactId>
+        <version>1.9.80</version>
+        <scope>test</scope>
+    </dependency>
+
+    <dependency>
         <groupId>com.amihaiemil.web</groupId>
         <artifactId>eo-yaml</artifactId>
         <version>5.1.2</version>
@@ -48,21 +62,101 @@
         <version>4.12</version>
         <scope>test</scope>
     </dependency>
+
+    <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>3.3.3</version>
+        <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-testing</artifactId>
+        <version>1.9.64</version>
+        <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-api-stubs</artifactId>
+        <version>1.9.64</version>
+        <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-tools-sdk</artifactId>
+        <version>1.9.64</version>
+        <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+        <groupId>com.google.api-client</groupId>
+        <artifactId>google-api-client-appengine</artifactId>
+        <version>1.23.0</version>
+        <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>2.22.0</version>
+    </dependency>
   </dependencies>
 
-  <build>
-    <plugins>
-      <!-- Provides `mvn package appengine:run` for local testing
-           and `mvn package appengine:deploy` for deploying. -->
-      <plugin>
-        <groupId>com.google.cloud.tools</groupId>
-        <artifactId>appengine-maven-plugin</artifactId>
-        <version>2.2.0</version>
-        <configuration>
-          <deploy.projectId>wear-systems-interns-step-2020</deploy.projectId>
-          <deploy.version>1</deploy.version>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+    <build>
+        <plugins>
+            <!-- Provides `mvn package appengine:run` for local testing
+                and `mvn package appengine:deploy` for deploying. -->
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>2.2.0</version>
+                <configuration>
+                <deploy.projectId>wear-systems-interns-step-2020</deploy.projectId>
+                <deploy.version>1</deploy.version>
+                </configuration>
+            </plugin>
+            <!-- Initiatilize frontend-maven-plugin -->
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.10.0</version>
+                <executions>
+                    <!-- installs node and npm -->
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>v12.18.2</nodeVersion>
+                            <npmVersion>6.14.6</npmVersion>
+                        </configuration>
+                    </execution>
+                    <!-- install necessary packages from package.json -->
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+                    <!-- activate npm test on build -->
+                    <execution>
+                        <id>run tests</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>test</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.servlet;
+package com.google.sps.testing;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -31,7 +31,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.sps.data.GoodDeed;
+import com.google.sps.testing.GoodDeed;
 
 
 @WebServlet("/cronjob")
@@ -42,18 +42,19 @@ public class CronServlet extends HttpServlet {
     private static final String TIME_STAMP = "Timestamp";
     private static final String DAILY_DEED = "Daily Deed";
     private static final String GOOD_DEED = "GoodDeed";
+    private static final String LINK = "Link";
     private static final String FALSE = "false";
     private static final String TRUE = "true";
     private static final int MINIMUM_QUERY_LENGTH = 1;
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         // Clears the Daily Deed Property for all elements
         resetDailyDeed();
 
         // Pulls all Database Entries
-        List<GoodDeed> GoodDeeds = PullDeedsFromDatastore();
+        List<GoodDeed> GoodDeeds = pullDeedsFromDatastore(datastore);
 
         // Filters out Posted Deeds
         List<GoodDeed> GoodDeeds_cleaned = cleanDeeds(GoodDeeds);
@@ -62,7 +63,7 @@ public class CronServlet extends HttpServlet {
             System.out.println("Query is below minimum size.");
             
             // Resets Posted Yet property of all posted deeds
-            resetPostedYet();
+            resetPostedYet(datastore);
             GoodDeeds_cleaned = GoodDeeds;
         }
 
@@ -73,7 +74,7 @@ public class CronServlet extends HttpServlet {
 
     }
 
-    private void resetDailyDeed() {
+    void resetDailyDeed() {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         Query query = new Query(GOOD_DEED);
@@ -86,9 +87,7 @@ public class CronServlet extends HttpServlet {
         }
     }
 
-    private void resetPostedYet() {
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-
+    void resetPostedYet(DatastoreService datastore) {
         Query query = new Query(GOOD_DEED);
         PreparedQuery results = datastore.prepare(query);
  
@@ -98,8 +97,7 @@ public class CronServlet extends HttpServlet {
         }
     }
 
-    private List<GoodDeed> PullDeedsFromDatastore() {
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    List<GoodDeed> pullDeedsFromDatastore(DatastoreService datastore) {
  
         // Only selects postes that are marked as not being posted yet
         Query query = new Query(GOOD_DEED);
@@ -115,15 +113,16 @@ public class CronServlet extends HttpServlet {
             String posted_yet_string = (String) deed.getProperty(POSTED_YET);
             boolean posted_yet_bool = Boolean.parseBoolean(posted_yet_string);
             long timestamp = (long) deed.getProperty(TIME_STAMP);
- 
-            GoodDeed deedObject = new GoodDeed(key, id, title, description, posted_yet_bool, timestamp);
+            String link = (String) deed.getProperty(LINK);
+
+            GoodDeed deedObject = new GoodDeed(key, id, title, description, posted_yet_bool, timestamp, link);
             GoodDeeds.add(deedObject);
         }
 
         return GoodDeeds;
     }
 
-    private void selectDailyDeed(List<GoodDeed> GoodDeeds) {
+    void selectDailyDeed(List<GoodDeed> GoodDeeds) {
         Random rand = new Random();
         GoodDeed daily_deed = GoodDeeds.get(rand.nextInt(GoodDeeds.size()));
 
@@ -140,7 +139,7 @@ public class CronServlet extends HttpServlet {
         }
     }
 
-    private List<GoodDeed> cleanDeeds(List<GoodDeed> deeds) {
+    List<GoodDeed> cleanDeeds(List<GoodDeed> deeds) {
         List<GoodDeed> cleaned_deeds = new ArrayList<>();
         for (GoodDeed deed : deeds) {
             if (!deed.getPosted()) {

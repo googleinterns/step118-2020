@@ -30,3 +30,12 @@
     font-family: roboto;
     text-decoration: underline;
 }
+
+.content {
+    width: 700px;
+    margin: auto;
+}
+
+main {
+    padding-top: 65px;
+}

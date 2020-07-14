@@ -11,17 +11,22 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+ 
 package com.google.sps.data;
-
-// Authentication class that stores whether the user is logged in and the redirect link
-public final class Authentication {
-
-    private final boolean loggedIn;
-    private final String redirectLink;
-
-    public Authentication(boolean loggedIn, String redirectLink) {
-        this.loggedIn = loggedIn;
-        this.redirectLink = redirectLink;
-    }
+ 
+/*
+ * This class handles a user's comment, gives it an id and timestamp
+ */
+public final class Comment {
+ 
+    private final long id;
+    private final String comment;
+    private final long timestamp;
+ 
+    public Comment(long id, String comment, long timestamp) {
+        this.id = id;
+        this.comment = comment;
+        this.timestamp = timestamp;
+  }
 }
+
