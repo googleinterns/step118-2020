@@ -95,7 +95,7 @@ function getComments() {
         commentsListElement.innerHTML = '';
  
         for (x in userComments) {
-            commentsListElement.appendChild(createListElement(userComments[x].comment));
+            commentsListElement.appendChild(createListElement(userComments[x]));
         }
         
     });
