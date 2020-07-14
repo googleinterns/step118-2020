@@ -65,20 +65,6 @@
 
     <dependency>
         <groupId>com.google.appengine</groupId>
-        <artifactId>appengine-testing</artifactId>
-        <version>1.9.64</version>
-        <scope>test</scope>
-    </dependency>
-
-    <dependency>
-        <groupId>com.google.appengine</groupId>
-        <artifactId>appengine-api-stubs</artifactId>
-        <version>1.9.64</version>
-        <scope>test</scope>
-    </dependency>
-
-    <dependency>
-        <groupId>com.google.appengine</groupId>
         <artifactId>appengine-tools-sdk</artifactId>
         <version>1.9.64</version>
         <scope>test</scope>
@@ -95,6 +81,12 @@
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
         <version>2.22.0</version>
+    </dependency>
+
+    <dependency>
+	    <groupId>com.sun.mail</groupId>
+	    <artifactId>javax.mail</artifactId>
+	    <version>1.6.2</version>
     </dependency>
   </dependencies>
 
