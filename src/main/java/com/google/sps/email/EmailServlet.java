@@ -16,6 +16,7 @@ package com.google.sps.testing;
 
 import com.sun.mail.smtp.SMTPTransport;
 
+import javax.mail.*; 
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -27,15 +28,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+
 import java.util.Date;
 import java.util.Properties;
+import java.util.List;
+import java.util.ArrayList;
 import java.io.IOException;
 
 import com.google.sps.testing.GoodDeed;
 import com.google.sps.testing.GoodDeedsServlet;
 
 @WebServlet("/email_users_cron")
-public class EmailServlet {
+public class EmailServlet extends HttpServlet {
 
     private static final String SMTP_SERVER = "smtp.gmail.com";
     private static final String USERNAME = "1deed1day@gmail.com";
@@ -48,12 +57,17 @@ public class EmailServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         deedServlet = new GoodDeedsServlet();
+        
         GoodDeed daily_deed = deedServlet.fetchDailyDeed();
-        sendEmail(daily_deed);
+        List<String> emails = fetchEmails();
+        
+
+        sendEmail(daily_deed, emails);
+        System.out.println("Email Sent");
+        response.sendRedirect("/index.html");
     }
 
-    @Override
-    void sendEmail(GoodDeed deed) {
+    void sendEmail(GoodDeed deed, List<String> user_emails) {
         
         Properties properties = System.getProperties();
         
@@ -71,7 +85,7 @@ public class EmailServlet {
         
         // Create seeion with Authenticator
         Session session = Session.getInstance(properties,
-            new javax.mail.Authenticator() {
+            new Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication(USERNAME, PASSWORD);
                 }
@@ -84,16 +98,17 @@ public class EmailServlet {
             // Send From
             msg.setFrom(new InternetAddress(USERNAME));
 
-            // Send To
-            msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(TO_ADDRESS, false));
+            // Send to all recipients
+            for (String email : user_emails) {
+                msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+            }
 
             // Subject
             msg.setSubject(EMAIL_SUBJECT);
 
             // Content
             String text = deed.getTitle() + ":\n" + deed.getDescription();
-            msg.setText(text;
-            msg.setSendDate( new Date() );
+            msg.setText(text);
 
             // Get SMTPTransport
             SMTPTransport t = (SMTPTransport) session.getTransport("smtp");
@@ -104,7 +119,7 @@ public class EmailServlet {
             // Send
             t.sendMessage(msg, msg.getAllRecipients());
 
-            System.out.println( "Response: " + t.getLastServerResponse() );
+            System.out.println("End of Send Function");
             t.close();
 
         }
@@ -113,7 +128,20 @@ public class EmailServlet {
         }
     }
 
-    // Fetch Daily Deed
+    // Fetch Emails
+    List<String> fetchEmails() {
+        List<String> emails = new ArrayList<>();
 
-    //
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+        Query query = new Query("User");
+        PreparedQuery prep_query = datastore.prepare(query);
+
+        for (Entity user : prep_query.asIterable()) {
+            String email = (String) user.getProperty("email");
+            emails.add(email);
+        }
+
+        return emails;
+    }
 }
