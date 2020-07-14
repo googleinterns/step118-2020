@@ -85,7 +85,6 @@ public class CommentServlet extends HttpServlet {
      */
     private void addComment(String newComment) {
         Entity currentDeed = getCurrentDeed();
-        //Collection userComments = (Collection) currentDeed.getProperty("Comments");
         List userComments = (List) currentDeed.getProperty("Comments");
 
         if (userComments == null || userComments.isEmpty()) {
