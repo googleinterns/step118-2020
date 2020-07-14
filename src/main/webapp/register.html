@@ -5,10 +5,10 @@
         <title>1Deed1Day</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
         <link rel="stylesheet" href="style.css">
-        <script src="script.js"></script>
+        <script src="script-register.js"></script>
     </head>
-    <body onload="onLoad()" class="background">
-        <nav class="navbar navbar-expand-lg navbar-light" style="background: none;">
+    <body onload="onLoad()">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <a class="navbar-brand" href="#">1Deed1Day</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -21,36 +21,30 @@
                     </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0">
-                    <a class="btn btn-outline-dark my-2 my-sm-0 link" type="submit" href="" id="loginBtn" role="button">Login here</a>
-                    <a class="btn btn-outline-dark my-2 my-sm-0 link" type="submit" href="" id="logoutBtn" role="button">Logout here</a>
+                    <a class="btn btn-outline-light my-2 my-sm-0" type="submit" href="" id="loginBtn" style="display: none;" role="button">Login here</a>
+                    <a class="btn btn-outline-light my-2 my-sm-0" type="submit" href="" id="logoutBtn" style="display: none;" role="button">Logout here</a>
                 </form>
             </div>
         </nav>
-        <main>
-            <div class="landing">
-                <div class="card bg-light mb-3 deedCard">
-                    <div class="card-header">
-                        <p class="card-text" id="curDate" class="date"></p>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title goodDeedTitle" id="good-deed-title"></h5>
-                        <h6 class="card-subtitle mb-2 text-muted" id="deed-group">General deed</h6>
-                        <p class="card-text goodDeedDes" id="good-deed"></p>
-                    </div>
-                    <div class="card-footer">
-                        <a class="btn btn-outline-dark" role="button" href="#" class="card-link" id="associated-link">Associated link</a>
-                        <a class="btn btn-dark" role="button" href="#" class="card-link" id="did-deed">Did the deed!</a>
-                    </div>
-                </div>
+        <main class="content">
+            <h1>Registration</h1>
+            <p>Please enter your name and email to register! You'll login with your email account.</p>
+            <div class="alert alert-danger" role="alert" id="register-error-alert" style="display: none;">
             </div>
-          <form action="/comments" method="POST">
-            <p>Leave a comment: </p>
-            <input type="text" name="newComment">
-            <br/><br/>
-            <input type="submit" />
-            <br/><br/>
-            <ul id="comment-container"></ul>
-          </form>
+            <div class="alert alert-success" role="alert" id="register-confirm" style="display: none;">
+                Login <a href="" class="alert-link" id="register-confirm-link">here</a> to start doing good deeds!
+            </div>
+            <form>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" id="email" name="email">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="submitRegistration()">Register</button>
+            </form>
         </main>
         <!-- jquery scripts for bootstrap -->
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
