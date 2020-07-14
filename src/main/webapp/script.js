@@ -12,19 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const MONTHS = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November",
+    "December"
+];
+
 // onload function when body loads
 function onLoad() {
     checkLogin();
     displayDailyDeed();
+    displayDate();
+    getComments();
 }
 
 // check if user is logged in and redirect correspondingly
 function checkLogin() {
     fetch('/login').then(response => response.json()).then((login) => {
         if (login.loggedIn) {
+            // don't show logout button
+            /*
             document.getElementById('loginBtn').style.display = 'none';
             document.getElementById('logoutBtn').style.display = 'block';
             document.getElementById('logoutBtn').href = login.redirectLink;
+            */
         }
         else {
             document.getElementById('loginBtn').href = login.redirectLink;
@@ -58,4 +69,43 @@ async function displayDailyDeed() {
 
     deedTitle.innerText = daily_deed.title;
     deedDescription.innerText = daily_deed.description;
+}
+
+/**
+ *displays the current date using the built in Date() class
+ */
+function displayDate() {
+    const current_date = document.getElementById("curDate");
+
+    var cur_date =  new Date();
+    var cur_year = cur_date.getFullYear();
+    var cur_month = cur_date.getMonth();
+    var cur_day = cur_date.getDate();
+
+    current_date.innerText = MONTHS[cur_month]+" "+cur_day+", "+cur_year+": ";
+}
+
+/**
+ *gets the comments, stored as a Json, and displays them to the webapp
+ */
+function getComments() {
+    fetch('/comments').then(response => response.json()).then((userComments) => {
+ 
+        const commentsListElement = document.getElementById('comment-container');
+        commentsListElement.innerHTML = '';
+ 
+        for (x in userComments) {
+            commentsListElement.appendChild(createListElement(userComments[x].comment));
+        }
+        
+    });
+}
+ 
+/** 
+ *Creates an <li> element containing text.
+ */
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
 }

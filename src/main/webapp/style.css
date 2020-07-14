@@ -39,23 +39,37 @@
     position: relative;
     text-align: center;
     font-family: roboto;
-    font-size: 40px;
+    font-size: 50px;
     color: rgb(10, 132, 255);
-    bottom: 15px;
+    bottom: 45px;
 }
 
-.date {
+.goodDeedDes {
     position: relative;
-    text-align: left;
-    font-family: sans-serif;
+    text-align: center;
+    font-family: roboto;
     font-size: 18px;
-    left: 30px;
     color: rgb(10, 132, 255);
+    bottom: 45px;
 }
 
 .content {
     width: 700px;
     margin: auto;
+}
+
+.goodDeedTitle {
+    display:inline;
+    font-family: roboto;
+    font-size: 18px;
+    text-decoration: underline;
+    color: rgb(10, 132, 255);
+}
+
+.date_deedContainer {
+    position: relative;
+    text-align: left;
+    left: 30px;
 }
 
 main {
