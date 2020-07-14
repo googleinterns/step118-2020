@@ -54,5 +54,13 @@ public class GoodDeed {
     public boolean getPosted() {
         return posted_yet;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
  
 }

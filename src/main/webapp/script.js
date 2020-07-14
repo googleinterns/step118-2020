@@ -118,8 +118,6 @@ function createListElement(text) {
 }
 
 async function getLink() {
-    const ASSOCIATED_LINK_ID = "associated-link";
-
     const response = await fetch('/goodDeeds');
     const daily_deed = await response.json();
 

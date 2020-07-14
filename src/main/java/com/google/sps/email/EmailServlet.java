@@ -29,8 +29,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.util.Date;
 import java.util.Properties;
-
 import java.io.IOException;
+
+import com.google.sps.testing.GoodDeed;
+import com.google.sps.testing.GoodDeedsServlet;
 
 @WebServlet("/email_users_cron")
 public class EmailServlet {
@@ -39,16 +41,19 @@ public class EmailServlet {
     private static final String USERNAME = "1deed1day@gmail.com";
     private static final String PASSWORD = "gmail password";
     private static final String EMAIL_SUBJECT = "Complete your daily deed";
-    private static final String EMAIL_TEXT = "Temporary Text";
     private static final String HOST = "localhost";
+
+    private GoodDeedsServlet deedServlet;
     
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
+        deedServlet = new GoodDeedsServlet();
+        GoodDeed daily_deed = deedServlet.fetchDailyDeed();
+        sendEmail(daily_deed);
     }
 
     @Override
-    void sendEmail() {
+    void sendEmail(GoodDeed deed) {
         
         Properties properties = System.getProperties();
         
@@ -86,7 +91,8 @@ public class EmailServlet {
             msg.setSubject(EMAIL_SUBJECT);
 
             // Content
-            msg.setText(EMAIL_TEXT);
+            String text = deed.getTitle() + ":\n" + deed.getDescription();
+            msg.setText(text;
             msg.setSendDate( new Date() );
 
             // Get SMTPTransport
