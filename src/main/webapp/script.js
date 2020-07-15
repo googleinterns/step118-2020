@@ -123,3 +123,8 @@ async function getLink() {
 
     window.location.href = daily_deed.link;
 }
+
+module.exports = {
+    displayDailyDeed: displayDailyDeed,
+    getLink: getLink
+}
