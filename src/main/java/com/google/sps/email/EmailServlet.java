@@ -16,7 +16,9 @@ package com.google.sps.testing;
 
 import com.sun.mail.smtp.SMTPTransport;
 
-import javax.mail.*; 
+import javax.mail.*;
+import javax.activation.DataContentHandler;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -48,7 +50,7 @@ public class EmailServlet extends HttpServlet {
 
     private static final String SMTP_SERVER = "smtp.gmail.com";
     private static final String USERNAME = "1deed1day@gmail.com";
-    private static final String PASSWORD = "gmail password";
+    private static final String PASSWORD = "Shreerag";
     private static final String EMAIL_SUBJECT = "Complete your daily deed";
     private static final String HOST = "localhost";
 
@@ -60,19 +62,18 @@ public class EmailServlet extends HttpServlet {
         
         GoodDeed daily_deed = deedServlet.fetchDailyDeed();
         List<String> emails = fetchEmails();
-        
 
-        sendEmail(daily_deed, emails);
+        sendEmail(daily_deed, USERNAME);
         System.out.println("Email Sent");
         response.sendRedirect("/index.html");
     }
 
-    void sendEmail(GoodDeed deed, List<String> user_emails) {
+    void sendEmail(GoodDeed deed, String email) {
         
         Properties properties = System.getProperties();
         
         // Enables Authentication
-        properties.put("mail.smtp.auth", HOST);
+        properties.put("mail.smtp.auth", "true");
         
         // Starts TSL
         properties.put("mail.smtp.starttls.enable", "true");
@@ -83,7 +84,7 @@ public class EmailServlet extends HttpServlet {
         // TLS Port
         properties.put("mail.smtp.port", "587");
         
-        // Create seeion with Authenticator
+        // Create session with Authenticator
         Session session = Session.getInstance(properties,
             new Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
@@ -92,16 +93,14 @@ public class EmailServlet extends HttpServlet {
             }
         );
         
-        Message msg = new MimeMessage(session);
-
         try {
+            Message msg = new MimeMessage(session);
+
             // Send From
             msg.setFrom(new InternetAddress(USERNAME));
 
             // Send to all recipients
-            for (String email : user_emails) {
-                msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
-            }
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
 
             // Subject
             msg.setSubject(EMAIL_SUBJECT);
@@ -117,10 +116,12 @@ public class EmailServlet extends HttpServlet {
             t.connect(SMTP_SERVER, USERNAME, PASSWORD);
 
             // Send
-            t.sendMessage(msg, msg.getAllRecipients());
+            
+            // DataContentHandler Error Occurs here
+            t.send(msg);
 
-            System.out.println("End of Send Function");
-            t.close();
+            System.out.println("\nEnd of Send Function\n");
+
 
         }
         catch (MessagingException e) {
