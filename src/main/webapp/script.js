@@ -18,31 +18,25 @@ const MONTHS = [
     "December"
 ];
 
+// firebase configuration details (nonsecret)
+var firebaseConfig = {
+    apiKey: "AIzaSyDkYtj0ZlLE4ggunFI8c6ov_wnVuDUsY6Y",
+    authDomain: "wear-systems-interns-step-2020.firebaseapp.com",
+    databaseURL: "https://wear-systems-interns-step-2020.firebaseio.com",
+    projectId: "wear-systems-interns-step-2020",
+    storageBucket: "wear-systems-interns-step-2020.appspot.com",
+    messagingSenderId: "372274219809",
+    appId: "1:372274219809:web:5eba81e89b21d1355e4c60",
+    measurementId: "G-EHL6SKF61R"
+};
+
 // onload function when body loads
 function onLoad() {
-    checkLogin();
+    authInitializeFirebase();
+    authCheckLogin();
     displayDailyDeed();
     displayDate();
     getComments();
-}
-
-// check if user is logged in and redirect correspondingly
-function checkLogin() {
-    fetch('/login').then(response => response.json()).then((login) => {
-        if (login.loggedIn) {
-            // don't show logout button
-            /*
-            document.getElementById('loginBtn').style.display = 'none';
-            document.getElementById('logoutBtn').style.display = 'block';
-            document.getElementById('logoutBtn').href = login.redirectLink;
-            */
-        }
-        else {
-            document.getElementById('loginBtn').href = login.redirectLink;
-            document.getElementById('loginBtn').style.display = 'block';
-            document.getElementById('logoutBtn').style.display = 'none';
-        }
-    });
 }
 
 //Fetch Deed Object from servlet and display on index

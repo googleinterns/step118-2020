@@ -13,158 +13,268 @@
 // limitations under the License.
 
 const scriptRegister = require('../../main/webapp/script-register');
-const { submitRegistration } = require('../../main/webapp/script-register');
 
-const YES_ERROR = true;
-const NO_ERROR = false;
+const ERROR_CODE = 'test/code';
 const ERROR_MESSAGE = 'There is an error';
-const NO_ERROR_MESSAGE = 'There is not an error';
-const INTERNAL_ERROR_MESSAGE = 'Internal error. Please try again.';
+const ERROR = {
+    code: ERROR_CODE,
+    message: ERROR_MESSAGE
+};
+const ERROR_OBJ = new Error(ERROR_CODE);
+const PASS_MATCH_ERROR = {
+    code: 'password/match',
+    message: 'The passwords you entered did not match.'
+}
 const NO_LINK = '';
-const TEST_LINK = '/test';
-const TEST_NAME = 'name';
-const TEST_EMAIL = 'test@example.com';
+const EMAIL = 'test@example.com';
+const PASS_1 = 'password1';
+const PASS_2 = 'password2';
 
-const DUMMY_HTML = '<input type="text" class="form-control" id="name" name="name">' +
-        '<input type="email" class="form-control" id="email" name="email">' +
-        '<div class="alert alert-danger" role="alert" id="register-error-alert" style="display: none;">' + 
-        '</div>' + 
-        '<div class="alert alert-success" role="alert" id="register-confirm" style="display: none;">' +
-        '   Login <a href="" class="alert-link" id="register-confirm-link">here</a> to start doing good deeds!' +
-        '</div>';
+const TEST_USER = {
+    displayName: 'test',
+    email: EMAIL,
+    uid: '0123456789'
+};
 
-// mock the fetch
-/*
-global.fetch = jest.fn(() => 
-    Promise.resolve({
-        json: () => Promise.resolve({
-            error: YES_ERROR,
-            message: ERROR_MESSAGE,
-            link: NO_LINK
-        })
-    })
-);
-*/
+// define empty mock functions to be referenced throughout tests
+const displayErrorMockFn = jest.fn();
+const showConfirmMockFn = jest.fn();
+const createUserMockFn = jest.fn();
+const hideAlertsMockFn = jest.fn();
+const sendEmailVerifyMockFn = jest.fn();
+const signOutAfterRegistrationMockFn = jest.fn();
 
-// clear the fetch mock before each test
-beforeEach(() => {
-    fetch.resetMocks();
+const TEST_HTML = 
+    '<h1>Registration</h1>' +
+    '<p>Please enter your name and email to register! You\'ll login with your email account.</p>' +
+    '<div class="alert alert-danger" role="alert" id="register-error-alert" style="display: none;">' +
+    '</div>' +
+    '<div class="alert alert-success" role="alert" id="register-confirm" style="display: none;">' +
+    '    You\'ve registered! Verify your email in your inbox and then login <a href="/login.html" class="alert-link" id="register-confirm-link">here</a>.' +
+    '</div>' +
+    '<form>' +
+    '   <div class="form-group">' +
+    '        <label for="email">Email address</label>' +
+    '        <input type="email" class="form-control" id="email" name="email">' +
+    '   </div>' +
+    '   <div class="form-group">' +
+    '        <label for="password">Password</label>' +
+    '        <input type="password" class="form-control" id="password" name="password">' +
+    '    </div>' +
+    '    <div class="form-group">' +
+    '        <label for="confirmPassword">Confirm password</label>' +
+    '        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">' +
+    '    </div>' +
+    '    <button type="button" class="btn btn-primary" onclick="submitRegistration()">Register</button>' +
+    '</form>'
+
+// reset mock function tracker after each test
+afterEach(() => {
+    jest.clearAllMocks();
 });
 
-test('test submitRegistration() with error', async () => {
-    // set the fetch response to have an error
-    fetch.mockResponseOnce(JSON.stringify({
-            error: YES_ERROR,
-            message: ERROR_MESSAGE,
-            link: NO_LINK
-        }));
 
-    // set up dummy HTML
-    document.body.innerHTML = DUMMY_HTML;
-    
-    // set input values for name and email
-    document.getElementById('name').value = TEST_NAME;
-    document.getElementById('email').value = TEST_EMAIL;
+test('displayError() correctly shows the error', () => {
+    document.body.innerHTML = TEST_HTML;
 
-    // call the tested function
-    return scriptRegister.submitRegistrationForTesting().then(response => {
+    scriptRegister.displayError(ERROR);
 
-        // check to make sure right fetch happened
-        expect(fetch).toHaveBeenCalledTimes(1);
-        expect(fetch).toHaveBeenCalledWith(
-            '/register-servlet?name=' + TEST_NAME + "&email=" + TEST_EMAIL
-        );
+    expect(document.getElementById('register-error-alert').style.display).toBe('block');
+    expect(document.getElementById('register-error-alert').innerHTML).toBe(ERROR_CODE + ': ' + ERROR_MESSAGE);
+    expect(document.getElementById('register-confirm').style.display).toBe('none');
+});
 
-        // check to make sure DOM manipulation worked
-        expect(document.getElementById('register-error-alert').style.display).toEqual('block');
-        expect(document.getElementById('register-confirm').style.display).toEqual('none');
-        expect(document.getElementById('register-error-alert').innerHTML).toEqual(ERROR_MESSAGE);
+
+test('hideAlerts() correctly hides all alerts', () => {
+    document.body.innerHTML = TEST_HTML;
+
+    // show both alerts
+    document.getElementById('register-error-alert').style.display = 'block';
+    document.getElementById('register-confirm').style.display = 'block';
+
+    scriptRegister.hideAlerts();
+
+    expect(document.getElementById('register-error-alert').style.display).toBe('none');
+    expect(document.getElementById('register-confirm').style.display).toBe('none');
+});
+
+
+test('showConfirm() correctly shows confirmation', () => {
+    document.body.innerHTML = TEST_HTML;
+
+    scriptRegister.showConfirm();
+
+    expect(document.getElementById('register-confirm').style.display).toBe('block');
+})
+
+
+test('signOutAfterRegistration() signs the user out and displays the login alert', async () => {
+    document.body.innerHTML = TEST_HTML;
+
+    // set signed in test user
+    var user = TEST_USER;
+
+    const logoutMockFn = jest.fn(user = null);
+
+    const mockFn = {
+        signOut: logoutMockFn,
+        showConfirm: showConfirmMockFn
+    }
+
+    await scriptRegister.signOutAfterRegistrationTest(user, mockFn).then(response => {
+        expect(logoutMockFn).toHaveBeenCalledTimes(1);
+        // successfully ran
+        expect(response).toBeNull();
+        expect(showConfirmMockFn).toHaveBeenCalledTimes(1);
     });
 });
+
+
+test('signOutAfterRegistration() has an error and does not display the login alert', async () => {
+    document.body.innerHTML = TEST_HTML;
+
+    // set signed in user
+    var user = TEST_USER
+    
+    const logoutMockFn = jest.fn(user = null).mockImplementation(() => {
+        throw ERROR_OBJ;
+    });
+
+    const mockFn = {
+        signOut: logoutMockFn,
+        showConfirm: showConfirmMockFn
+    }
+
+    await scriptRegister.signOutAfterRegistrationTest(user, mockFn).then(response => {
+        expect(logoutMockFn).toHaveBeenCalledTimes(1);
+        // check error occured, strict equals to check object equality
+        expect(response).toStrictEqual(ERROR_OBJ);
+        expect(showConfirmMockFn).toHaveBeenCalledTimes(1);
+    });
+});
+
+
+test('sendEmailVerify() has no error and calls signOutAfterRegistration()', async () => {
+    document.body.innerHTML = TEST_HTML;
+
+    const sendEmailVerificationMockFn = jest.fn();
+
+    const mockFn = {
+        sendEmailVerification: sendEmailVerificationMockFn,
+        signOutAfterRegistration: signOutAfterRegistrationMockFn,
+        displayError: displayErrorMockFn
+    }
+
+    await scriptRegister.sendEmailVerifyTest(TEST_USER, mockFn).then(response => {
+        expect(sendEmailVerificationMockFn).toHaveBeenCalledTimes(1);
+        expect(displayErrorMockFn).not.toHaveBeenCalled();
+        expect(signOutAfterRegistrationMockFn).toHaveBeenCalledTimes(1);
+    })
+});
+
+
+test('sendEmailVerify() has an error and calls signOutAfterRegistration() as well as displays the error', async () => {
+    document.body.innerHTML = TEST_HTML;
+
+    const sendEmailVerificationMockFn = jest.fn().mockImplementation(() => {
+        throw ERROR_OBJ;
+    });
+
+    const mockFn = {
+        sendEmailVerification: sendEmailVerificationMockFn,
+        signOutAfterRegistration: signOutAfterRegistrationMockFn,
+        displayError: displayErrorMockFn
+    }
+
+    await scriptRegister.sendEmailVerifyTest(TEST_USER, mockFn).then(response => {
+        expect(sendEmailVerificationMockFn).toHaveBeenCalledTimes(1);
+        expect(displayErrorMockFn).toHaveBeenCalledTimes(1);
+        expect(displayErrorMockFn).toHaveBeenCalledWith(ERROR_OBJ);
+        expect(signOutAfterRegistrationMockFn).toHaveBeenCalledTimes(1);
+    });
+});
+
+
+test('createUser() has no error and calls sendEmailVerify()', async () => {
+    document.body.innerHTML = TEST_HTML;
+
+    const createUserWithEmailAndPasswordMockFn = jest.fn();
+
+    const mockFn = {
+        createUserWithEmailAndPassword: createUserWithEmailAndPasswordMockFn,
+        sendEmailVerify: sendEmailVerifyMockFn,
+        displayError: displayErrorMockFn
+    }
+
+    await scriptRegister.createUserTest(EMAIL, PASS_1, TEST_USER, mockFn).then(response => {
+        expect(createUserWithEmailAndPasswordMockFn).toHaveBeenCalledTimes(1);
+        expect(sendEmailVerifyMockFn).toHaveBeenCalledTimes(1);
+        expect(sendEmailVerifyMockFn).toHaveBeenCalledWith(TEST_USER);
+        expect(displayErrorMockFn).not.toHaveBeenCalled();
+    });
+});
+
+
+test('createUser() has an error and displays error as well as does not sendEmailVerify()', async () => {
+    const createUserWithEmailAndPasswordMockFn = jest.fn().mockImplementation(() => {
+        throw ERROR_OBJ;
+    });
+
+    const mockFn = {
+        createUserWithEmailAndPassword: createUserWithEmailAndPasswordMockFn,
+        sendEmailVerify: sendEmailVerifyMockFn,
+        displayError: displayErrorMockFn
+    }
+
+    await scriptRegister.createUserTest(EMAIL, PASS_1, TEST_USER, mockFn).then(response => {
+        expect(createUserWithEmailAndPasswordMockFn).toHaveBeenCalledTimes(1);
+        expect(sendEmailVerifyMockFn).not.toHaveBeenCalled();
+        expect(displayErrorMockFn).toHaveBeenCalledTimes(1);
+        expect(displayErrorMockFn).toHaveBeenCalledWith(ERROR_OBJ);
+    });
+});
+
 
 test('test submitRegistration() without error', async () => {
-    // set the fetch response for no error
-    fetch.mockResponseOnce(JSON.stringify({
-            error: NO_ERROR,
-            message: NO_ERROR_MESSAGE,
-            link: TEST_LINK
-        }));
-
-    // set up dummy HTML
-    document.body.innerHTML = DUMMY_HTML;
-
-    // set input values for name and email
-    document.getElementById('name').value = TEST_NAME;
-    document.getElementById('email').value = TEST_EMAIL;
-
-    // call the tested function
-    return scriptRegister.submitRegistrationForTesting().then(response => {
-
-        // check to make sure right fetch happened
-        expect(fetch).toHaveBeenCalledTimes(1);
-        expect(fetch).toHaveBeenCalledWith(
-            '/register-servlet?name=' + TEST_NAME + "&email=" + TEST_EMAIL
-        );
-
-        // check to make sure DOM manipulation worked
-        expect(document.getElementById('register-error-alert').style.display).toEqual('none');
-        expect(document.getElementById('register-confirm').style.display).toEqual('block');
-        expect(document.getElementById('register-confirm-link').getAttribute('href')).toEqual(TEST_LINK);
-    });
-});
-
-test('test submitRegistration() with empty return', async () => {
-    // set the fetch response for no error
-    fetch.mockResponseOnce(JSON.stringify({}));
-
-    // set up dummy HTML
-    document.body.innerHTML = DUMMY_HTML;
+    document.body.innerHTML = TEST_HTML;
     
     // set input values for name and email
-    document.getElementById('name').value = TEST_NAME;
-    document.getElementById('email').value = TEST_EMAIL;
+    document.getElementById('email').value = EMAIL;
+    document.getElementById('password').value = PASS_1;
+    document.getElementById('confirmPassword').value = PASS_1;
 
-    // call the tested function
-    return scriptRegister.submitRegistrationForTesting().then(response => {
+    const mockFn = {
+        createUser: createUserMockFn,
+        hideAlerts: hideAlertsMockFn,
+        displayError: displayErrorMockFn
+    }
 
-        // check to make sure right fetch happened
-        expect(fetch).toHaveBeenCalledTimes(1);
-        expect(fetch).toHaveBeenCalledWith(
-            '/register-servlet?name=' + TEST_NAME + "&email=" + TEST_EMAIL
-        );
+    scriptRegister.submitRegistrationTest(mockFn);
 
-        // check to make sure DOM manipulation worked
-        expect(document.getElementById('register-error-alert').style.display).toEqual('block');
-        expect(document.getElementById('register-confirm').style.display).toEqual('none');
-        expect(document.getElementById('register-error-alert').innerHTML).toEqual(INTERNAL_ERROR_MESSAGE);
-    });
+    expect(hideAlertsMockFn).toHaveBeenCalledTimes(1);
+    expect(createUserMockFn).toHaveBeenCalledTimes(1);
+    expect(displayErrorMockFn).not.toHaveBeenCalled();
 });
 
-test('test submitRegistration() with non-boolean error', async () => {
-    // set the fetch response for no error
-    fetch.mockResponseOnce(JSON.stringify({
-            error: ERROR_MESSAGE
-        }));
 
-    // set up dummy HTML
-    document.body.innerHTML = DUMMY_HTML;
+test('test submitRegistration() with error, passwords don\'t match', async () => {
+    document.body.innerHTML = TEST_HTML;
     
     // set input values for name and email
-    document.getElementById('name').value = TEST_NAME;
-    document.getElementById('email').value = TEST_EMAIL;
+    document.getElementById('email').value = EMAIL;
+    document.getElementById('password').value = PASS_1;
+    document.getElementById('confirmPassword').value = PASS_2;
 
-    // call the tested function
-    return scriptRegister.submitRegistrationForTesting().then(response => {
+    const mockFn = {
+        createUser: createUserMockFn,
+        hideAlerts: hideAlertsMockFn,
+        displayError: displayErrorMockFn
+    }
 
-        // check to make sure right fetch happened
-        expect(fetch).toHaveBeenCalledTimes(1);
-        expect(fetch).toHaveBeenCalledWith(
-            '/register-servlet?name=' + TEST_NAME + "&email=" + TEST_EMAIL
-        );
+    scriptRegister.submitRegistrationTest(mockFn);
 
-        // check to make sure DOM manipulation worked
-        expect(document.getElementById('register-error-alert').style.display).toEqual('block');
-        expect(document.getElementById('register-confirm').style.display).toEqual('none');
-        expect(document.getElementById('register-error-alert').innerHTML).toEqual(INTERNAL_ERROR_MESSAGE);
-    });
+    expect(hideAlertsMockFn).toHaveBeenCalledTimes(1);
+    expect(createUserMockFn).not.toHaveBeenCalled();
+    expect(displayErrorMockFn).toHaveBeenCalledTimes(1);
+    expect(displayErrorMockFn).toHaveBeenCalledWith(PASS_MATCH_ERROR);
 });
