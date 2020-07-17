@@ -64,7 +64,6 @@ public class EmailServlet extends HttpServlet {
         
         GoodDeed daily_deed = deedServlet.fetchDailyDeed();
         List<String> emails = fetchEmails();
-
         for(String email : emails) {
             sendEmail(daily_deed, email);
         }
