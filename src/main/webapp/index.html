@@ -19,6 +19,9 @@
                     <li class="nav-item active">
                         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register.html">Register</a>
+                    </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0">
                     <a class="btn btn-outline-dark my-2 my-sm-0 link" type="submit" href="" id="loginBtn" role="button">Login here</a>
@@ -43,14 +46,27 @@
                     </div>
                 </div>
             </div>
-          <form action="/comments" method="POST">
-            <p>Leave a comment: </p>
-            <input type="text" name="newComment">
-            <br/><br/>
-            <input type="submit" />
-            <br/><br/>
-            <ul id="comment-container"></ul>
-          </form>
+            <form action="/comments" method="POST">
+                <div class="form-group centerCommentsForm">
+                    <label for="exampleInputEmail1">Felt inspired? Leave a comment down below!</label>
+                    <input type="text" name="newComment" class="form-control">
+                    <small id="emailHelp" class="form-text text-muted">Feel free to leave some feedback or share a personal testimony!</small>
+                </div>
+                <div class="commentButtonContainer">
+                    <div class="commentButtonCenter">
+                        <button type="submit" class="btn btn-dark">Submit</button>
+                    </div>
+                </div>
+            </form>
+            <br><br>
+            <ul class="list-unstyled commentsList" id="comment-container"></ul>
+            <li class="media my-4 userComments" id="commentTemplate" style="display: none;">
+                    <img src="" class="mr-3 commentsImage" alt="">
+                    <div class="media-body" id="comment-body">
+                        <h5 class="mt-0 mb-1"><p></p></h5>
+                        <p></p>
+                    </div>
+            </li>
         </main>
         <!-- jquery scripts for bootstrap -->
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
