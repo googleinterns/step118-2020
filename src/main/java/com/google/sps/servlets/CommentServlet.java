@@ -44,8 +44,15 @@ import java.io.IOException;
  */
 @WebServlet("/comments")
 public class CommentServlet extends HttpServlet {
- 
-    private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    private static final String COMMENTS_PROPERTY = "Comments"; //The name of the property storing the comments
+    private static final String JSON_CONTENT_TYPE = "application/json;";
+    private static final String COMMENT_FORM_NAME = "newComment"; //The name of the form where users enter comments
+    private static final String WEBAPP_HOME = "/index.html";
+    private static final String DAILY_DEED = "Daily Deed";
+    private static final String TRUE = "true";
+    private static final String GOOD_DEED = "GoodDeed";
+
+    private static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private Gson gson = new Gson();
  
  
@@ -55,13 +62,13 @@ public class CommentServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
         Entity currentDeed = getCurrentDeed();
-        List userComments = (List) currentDeed.getProperty("Comments");
+        List userComments = (List) currentDeed.getProperty(COMMENTS_PROPERTY);
   
         List<String> comments = new ArrayList<>();
 
         comments.addAll(userComments);
         
-        response.setContentType("application/json;");       
+        response.setContentType(JSON_CONTENT_TYPE);       
         response.getWriter().println(gson.toJson(comments));
     }
  
@@ -71,11 +78,11 @@ public class CommentServlet extends HttpServlet {
      */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String newComment = request.getParameter("newComment");
+        String newComment = request.getParameter(COMMENT_FORM_NAME);
         long timestamp = System.currentTimeMillis(); // Used in case we need to sort the comments by time
  
         addComment(newComment);
-        response.sendRedirect("/index.html"); // Sends users back to the home page after entering a comment
+        response.sendRedirect(WEBAPP_HOME); // Sends users back to the home page after entering a comment
     }
 
     
@@ -84,7 +91,7 @@ public class CommentServlet extends HttpServlet {
      */
     private void addComment(String newComment) {
         Entity currentDeed = getCurrentDeed();
-        List userComments = (List) currentDeed.getProperty("Comments");
+        List userComments = (List) currentDeed.getProperty(COMMENTS_PROPERTY);
 
         if (userComments == null || userComments.isEmpty()) {
             userComments = new ArrayList<>();
@@ -92,7 +99,7 @@ public class CommentServlet extends HttpServlet {
         
         userComments.add(newComment);
 
-        currentDeed.setProperty("Comments", userComments);
+        currentDeed.setProperty(COMMENTS_PROPERTY, userComments);
         datastore.put(currentDeed);
     }
 
@@ -100,10 +107,9 @@ public class CommentServlet extends HttpServlet {
      * Gets the current Deed of the day
      * Note: copied over from GoodDeedServlet.fetchDailyDeed() but tweaked a little
      */
-    private Entity getCurrentDeed() {
-        Filter propertyFilter = new FilterPredicate("Daily Deed", FilterOperator.EQUAL, "true");
-        Query query = new Query("GoodDeed").setFilter(propertyFilter);
- 
+    private static Entity getCurrentDeed() {
+        Filter propertyFilter = new FilterPredicate(DAILY_DEED, FilterOperator.EQUAL, TRUE);
+        Query query = new Query(GOOD_DEED).setFilter(propertyFilter);
         PreparedQuery results = datastore.prepare(query);
 
         Entity currentDeed = results.asSingleEntity();
