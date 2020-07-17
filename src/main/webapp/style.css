@@ -39,3 +39,52 @@
 main {
     padding-top: 65px;
 }
+
+/*This method is used to center the form where users
+enter their comments*/
+.centerCommentsForm {
+    margin: auto;
+    width: 65%;
+}
+
+/*The following two methods are used to center the 
+button that is used to submit a comment*/
+.commentButtonContainer {
+    height: 50px;
+    position: relative;
+}
+
+.commentButtonCenter {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+/*This class is used to style user comments
+  - Centers comments
+  - Makes them white 
+  - Rounds the corners
+*/
+.userComments {
+    background-color: white;
+    margin: auto;
+    width: 90%;
+    border-radius: 25px;
+}
+
+/*Used to style the comment's image*/
+.commentsImage {
+    height: 7%;
+    width: 7%;
+    border-radius: 25px;
+}
+
+/*Style the whole comments list, moves 
+it slightly up*/
+.commentsList {
+    position: relative;
+    bottom: 20px;
+}
