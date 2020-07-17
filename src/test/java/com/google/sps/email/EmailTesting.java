@@ -39,8 +39,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig;
 import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
 
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import static org.mockito.Mockito.mock;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -86,8 +85,12 @@ public class EmailTesting {
     public void setUp() {
         emailServlet = new EmailServlet();
         helper.setUp();
-        MockitoAnnotations.initMocks(this);
         Mailbox.clearAll();
+    }
+
+    @After
+    public void tearDown() {
+        helper.tearDown();
     }
 
     @Test
@@ -109,7 +112,7 @@ public class EmailTesting {
     }
 
     @Test
-    public void testsendEmail() throws MessagingException, IOException, MessagingException {
+    public void testsendEmail() throws IOException, AddressException, MessagingException {
         DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
         
         Entity testEntity = new Entity(GOOD_DEED);
@@ -135,13 +138,9 @@ public class EmailTesting {
         Assert.assertEquals(content, inbox.get(0).getContent());
     }
 
-    @Mock
-    HttpServletRequest request;
-    @Mock
-    HttpServletResponse response;
 
     @Test
-    public void testDoGet() throws MessagingException, IOException, MessagingException {
+    public void testDoGet() throws IOException, AddressException, MessagingException {
         DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 
         Entity deedEntity = new Entity(GOOD_DEED);
@@ -162,7 +161,7 @@ public class EmailTesting {
         
         String content = deed.getTitle() + ":\n" + deed.getDescription();
 
-        emailServlet.doGet(request, response);
+        emailServlet.doGet( mock(HttpServletRequest.class), mock(HttpServletResponse.class) );
 
         List<Message> inbox = Mailbox.get(EMAIL_INPUT);
   
