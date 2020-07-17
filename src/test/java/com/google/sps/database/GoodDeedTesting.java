@@ -94,4 +94,22 @@ public final class GoodDeedTesting {
 
         Assert.assertEquals(POSTED_YET, actual);
     }
+
+    @Test
+    public void testGetTitle() {
+        Key k1 = KeyFactory.createKey(GOOD_DEED, KEY);
+        GoodDeed deed = new GoodDeed(k1, ID, TITLE, DESCRIPTION, POSTED_YET, TIMESTAMP, LINK);
+        String actual = deed.getTitle();
+
+        Assert.assertEquals(TITLE, actual);
+    }
+
+    @Test
+    public void testGetDescription() {
+        Key k1 = KeyFactory.createKey(GOOD_DEED, KEY);
+        GoodDeed deed = new GoodDeed(k1, ID, TITLE, DESCRIPTION, POSTED_YET, TIMESTAMP, LINK);
+        String actual = deed.getDescription();
+
+        Assert.assertEquals(DESCRIPTION, actual);
+    }
 }
