@@ -14,6 +14,8 @@
 
 package com.google.sps.testing;
 
+import java.lang.InterruptedException;
+
 import com.sun.mail.smtp.SMTPTransport;
 
 import javax.mail.*;
@@ -62,9 +64,9 @@ public class EmailServlet extends HttpServlet {
         
         GoodDeed daily_deed = deedServlet.fetchDailyDeed();
         List<String> emails = fetchEmails();
+
         for(String email : emails) {
             sendEmail(daily_deed, email);
-
         }
         System.out.println("Email Sent");
         response.sendRedirect("/index.html");
@@ -72,7 +74,7 @@ public class EmailServlet extends HttpServlet {
 
     void sendEmail(GoodDeed deed, String email) {
         
-        Properties properties = System.getProperties();
+        Properties properties = new Properties();
         
         // Enables Authentication
         properties.put("mail.smtp.auth", "true");
@@ -112,19 +114,17 @@ public class EmailServlet extends HttpServlet {
             msg.setText(text);
 
             // Get SMTPTransport
-            SMTPTransport t = (SMTPTransport) session.getTransport("smtp");
+            Transport t = session.getTransport("smtp");
 
             // Connect
             t.connect(SMTP_SERVER, USERNAME, PASSWORD);
 
             // Send
-            
-            // DataContentHandler Error Occurs here
-            t.send(msg);
+            t.sendMessage(msg, msg.getAllRecipients());
 
             System.out.println("\nEnd of Send Function\n");
 
-
+            t.close();
         }
         catch (MessagingException e) {
             e.printStackTrace();
