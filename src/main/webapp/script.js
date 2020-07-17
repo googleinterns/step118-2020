@@ -18,6 +18,7 @@ const MONTHS = [
     "December"
 ];
 
+
 // onload function when body loads
 function onLoad() {
     checkLogin();
@@ -95,17 +96,44 @@ function getComments() {
         commentsListElement.innerHTML = '';
  
         for (x in userComments) {
-            commentsListElement.appendChild(createListElement(userComments[x].comment));
+            commentsListElement.appendChild(createComment(userComments[x].comment));
         }
         
     });
 }
- 
-/** 
- *Creates an <li> element containing text.
+
+/**
+ * creates a styled comment box to display on the web page
  */
-function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
+function createComment(text) {
+    var commentBox = document.getElementById("commentTemplate").cloneNode(true);
+    comment = sanitizeString(text);
+
+    commentBox.getElementsByTagName("p")[0].innerHTML = "User's Name Here";
+    commentBox.getElementsByTagName("img")[0].src = getProfilePicture();
+    commentBox.getElementsByTagName("p")[1].innerHTML = comment;
+    
+
+    commentBox.style.display = "flex";
+
+    return commentBox;
+}
+
+// Sanitize the string to avoid HTML injection
+function sanitizeString(string) {
+    string = string.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+    return string;
+}
+
+/**
+ * Provides a profile picture for users that do not have one
+ */
+function getProfilePicture() {
+    const pictures = ["/images/profile_pictures/blathers.jpg", 
+    "/images/profile_pictures/isabelle.jpg", "/images/profile_pictures/kk.jpg",
+    "/images/profile_pictures/timmy.jpg", "/images/profile_pictures/tommy.jpg",
+    "/images/profile_pictures/tomnook.jpg"];
+
+    return pictures[Math.round(Math.random()*6)];
 }
