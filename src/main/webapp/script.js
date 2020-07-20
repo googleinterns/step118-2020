@@ -103,7 +103,7 @@ function getComments() {
         commentsListElement.innerHTML = '';
  
         for (x in userComments) {
-            commentsListElement.appendChild(createListElement(userComments[x]));
+            commentsListElement.appendChild(createComment(userComments[x]));
         }
         
     });
