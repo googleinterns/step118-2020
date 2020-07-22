@@ -63,7 +63,6 @@ public class CommentServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
         Entity currentDeed = getCurrentDeed();
         List userComments = (List) currentDeed.getProperty(COMMENTS_PROPERTY);
-  
         List<String> comments = new ArrayList<>();
 
         comments.addAll(userComments);
@@ -91,13 +90,13 @@ public class CommentServlet extends HttpServlet {
      */
     private void addComment(String newComment) {
         Entity currentDeed = getCurrentDeed();
-        List userComments = (List) currentDeed.getProperty(COMMENTS_PROPERTY);
+        List userComments = (List) currentDeed.getProperty(COMMENTS_PROPERTY); 
 
         if (userComments == null || userComments.isEmpty()) {
             userComments = new ArrayList<>();
         }
         
-        userComments.add(newComment);
+        userComments.add(0, newComment);
 
         currentDeed.setProperty(COMMENTS_PROPERTY, userComments);
         datastore.put(currentDeed);
@@ -107,7 +106,7 @@ public class CommentServlet extends HttpServlet {
      * Gets the current Deed of the day
      * Note: copied over from GoodDeedServlet.fetchDailyDeed() but tweaked a little
      */
-    private static Entity getCurrentDeed() {
+    protected Entity getCurrentDeed() {
         Filter propertyFilter = new FilterPredicate(DAILY_DEED, FilterOperator.EQUAL, TRUE);
         Query query = new Query(GOOD_DEED).setFilter(propertyFilter);
         PreparedQuery results = datastore.prepare(query);
