@@ -28,24 +28,27 @@ import com.google.sps.data.Comment;
  */
 @RunWith(JUnit4.class)
 public final class CommentTest {
-    private static final Comment comment = new Comment(123, "comment", 456);
+    private static final int NEW_ID = 123;
+    private static final String NEW_COMMENT = "comment";
+    private static final int NEW_TIMESTAMP = 456;
+    private static final Comment comment = new Comment(NEW_ID, NEW_COMMENT, NEW_TIMESTAMP);
     
     /*Checks if the class complains when we input an improper comment*/
     @Test(expected = IllegalArgumentException.class)
     public void throwsNullName() {
-        Comment comment = new Comment(123, null, 456);
+        Comment comment = new Comment(NEW_ID, null, NEW_TIMESTAMP);
     }
 
     /*Checks if the class returns the correct comment*/
     @Test
     public void testGetComment() {
-        Assert.assertEquals("comment", comment.getComment());
+        Assert.assertEquals(NEW_COMMENT, comment.getComment());
     }
 
     /*Checks if the class returns the correct timestamp*/
     @Test
     public void testGetTimestamp() {
-        Assert.assertEquals(456, comment.getTimestamp());
-        Assert.assertNotEquals(123, comment.getTimestamp());
+        Assert.assertEquals(NEW_TIMESTAMP, comment.getTimestamp());
+        Assert.assertNotEquals(NEW_ID, comment.getTimestamp());
     }
 }
