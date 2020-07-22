@@ -96,7 +96,7 @@ public class CommentServlet extends HttpServlet {
             userComments = new ArrayList<>();
         }
         
-        userComments.add(newComment);
+        userComments.add(0, newComment);
 
         currentDeed.setProperty(COMMENTS_PROPERTY, userComments);
         datastore.put(currentDeed);
