@@ -31,7 +31,6 @@ public final class CommentTest {
     private static final int NEW_ID = 123;
     private static final String NEW_COMMENT = "comment";
     private static final int NEW_TIMESTAMP = 456;
-    private static final Comment comment = new Comment(NEW_ID, NEW_COMMENT, NEW_TIMESTAMP);
     
     /*Checks if the class complains when we input an improper comment*/
     @Test(expected = IllegalArgumentException.class)
@@ -42,12 +41,14 @@ public final class CommentTest {
     /*Checks if the class returns the correct comment*/
     @Test
     public void testGetComment() {
+        Comment comment = new Comment(NEW_ID, NEW_COMMENT, NEW_TIMESTAMP);
         Assert.assertEquals(NEW_COMMENT, comment.getComment());
     }
 
     /*Checks if the class returns the correct timestamp*/
     @Test
     public void testGetTimestamp() {
+        Comment comment = new Comment(NEW_ID, NEW_COMMENT, NEW_TIMESTAMP);
         Assert.assertEquals(NEW_TIMESTAMP, comment.getTimestamp());
         Assert.assertNotEquals(NEW_ID, comment.getTimestamp());
     }
