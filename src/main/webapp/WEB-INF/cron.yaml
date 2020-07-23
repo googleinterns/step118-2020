@@ -2,7 +2,6 @@ cron:
 - description: "Selects Daily Deed"
   url: /cronjob
   schedule: every 24 hours
-
 - description: "Sends out Emails"
   url: /email_users_cron
   schedule: every 24 hours

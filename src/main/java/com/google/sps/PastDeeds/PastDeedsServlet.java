@@ -38,7 +38,7 @@ import java.util.ArrayList;
 
 import com.google.sps.testing.GoodDeed;
 
-@WebServlet("/ghost-of-deed-past")
+@WebServlet("/ghost-of-deeds-past")
 public class PastDeedsServlet extends HttpServlet {
     private static final String FALSE = "false";
     private static final String TRUE = "true";

@@ -12,51 +12,78 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-function displayPastDeeds() {
-    const deedList = document.getElementById("deed-list");
-    
-    fetch('/ghost-of-deed-past').then(response => response.json()).then(deeds => {
-        if (deeds.length == 0) {
-            deedList.innerText = "There are no pasts deeds to display";
+async function displayPastDeeds() {
+    const DEED_LIST = "deed-list";
+    const DEED_URL = "/ghost-of-deeds-past";
+    const NO_DEEDS_MESSAGE = "There are no pasts deeds to display";
+
+    const deedList = document.getElementById(DEED_LIST);
+
+    const response = await fetch(DEED_URL);
+    const deeds = await response.json();
+
+    if (deeds.length == 0) {
+            deedList.innerText = NO_DEEDS_MESSAGE;
         }
-        else {
-            deeds.forEach(deed => {
-                deedList.appendChild(createDeedElement(deed));
-            })
-        }
-    });
+    else {
+        deeds.forEach(deed => {
+            deedList.appendChild(createDeedElement(deed));
+        })
+    }
+
 }
 
 function createDeedElement(deed) {
-    const deedElement = document.createElement('div');
-    deedElement.className = 'card bg-light mb-3 deedCard';
+    const DIV = "div";
+    const H5 = "h5";
+    const P = "p";
+    const BUTTON = "button";
+    const CLICK = 'click';
 
-    const cardHeader = document.createElement('div');
-    cardHeader.className = 'card-header';
-    cardHeader.innerText = 'Previous Deed';
+    const CLASS_CARD = "card bg-light mb-3 deedCard";
+    const CLASS_HEADER = 'card-header';
+    const CLASS_BODY = 'card-body';
+    const CLASS_TITLE = 'card-title goodDeedTitle';
+    const CLASS_DES = 'card-text goodDeeddes';
+    const CLASS_FOOTER = 'card-footer';
+    const CLASS_LINK = 'card-link';
+    const CLASS_BUTTON = 'btn btn-outline-dark';
+
+    const HEADER_TEXT = 'Previous Deed';
+    const LINK_BUTTON_TEXT = 'Associated Link';
+
+    const NULL = "null";
+
+
+    const deedElement = document.createElement(DIV);
+    deedElement.className = CLASS_CARD;
+
+    const cardHeader = document.createElement(DIV);
+    cardHeader.className = CLASS_HEADER;
+    cardHeader.innerText = HEADER_TEXT;
     
-    const cardBody = document.createElement('div');
-    cardBody.className = 'card-body';
+    const cardBody = document.createElement(DIV);
+    cardBody.className = CLASS_BODY;
     
-    const titleElement = document.createElement('h5');
-    titleElement.className = 'card-title goodDeedTitle';
+    const titleElement = document.createElement(H5);
+    titleElement.className = CLASS_TITLE;
     titleElement.innerText = deed.title;
 
-    const descriptionElement = document.createElement('p');
-    descriptionElement.className = 'card-text goodDeeddes';
+    const descriptionElement = document.createElement(P);
+    descriptionElement.className = CLASS_DES;
     descriptionElement.innerText = deed.description;
 
-    const cardFooter = document.createElement('div');
-    cardFooter.className = 'card-footer';
+    const cardFooter = document.createElement(DIV);
+    cardFooter.className = CLASS_FOOTER;
 
-    if (deed.link != "null") {
-        const linkButtonElement = document.createElement('button');
+    if (deed.link != NULL) {
+        const linkButtonElement = document.createElement(BUTTON);
         
-        linkButtonElement.classList.add('card-link');
-        linkButtonElement.className = 'btn btn-outline-dark';
-        linkButtonElement.innerText = 'Associated Link';
+        linkButtonElement.classList.add(CLASS_LINK);
+        linkButtonElement.className = CLASS_BUTTON;
+        linkButtonElement.innerText = LINK_BUTTON_TEXT;
 
-        linkButtonElement.addEventListener('click', () => {
+        linkButtonElement.addEventListener(CLICK, () => {
             getLink(deed);
         });
 
@@ -75,4 +102,10 @@ function createDeedElement(deed) {
 
 function getLink(deed) {
     window.location.href = deed.link;
+}
+
+module.exports = {
+    displayPastDeeds: displayPastDeeds,
+    createDeedElement: createDeedElement,
+    getLink: getLink
 }
