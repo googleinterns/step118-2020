@@ -148,7 +148,7 @@ public class PastDeedTesting {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
 
-        Mockito.doReturn(pw).when(response).getWriter();
+        Mockito.thenReturn(pw).when(response).getWriter();
 
         Gson gson = new Gson();
 

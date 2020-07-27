@@ -65,7 +65,6 @@ async function displayDailyDeed() {
         link: either an associated link, or "null"
     }
     */
-    //console.log(daily_deed);
 
     const deedTitle = document.getElementById(DEED_TITLE_ID);
     const deedDescription = document.getElementById(DEED_DESCRIPTION_ID);
