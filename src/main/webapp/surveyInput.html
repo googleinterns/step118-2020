@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>1Deed1Day</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <link rel="stylesheet" href="style.css">
+        <script src="script-survey.js"></script>
+    </head>
+    <body onload="onLoad()" class="surveyBackground">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="/">1Deed1Day</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register.html">Register</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Community<span class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0 surveyInputButton">
+                    <a class="btn btn-outline-light my-2 my-sm-0" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        Have an idea? Submit it here!
+                    </a>
+                </form>
+                <form class="form-inline my-2 my-lg-0">
+                    <a class="btn btn-outline-light my-2 my-sm-0" type="submit" href="" id="loginBtn" style="display: none;" role="button">Login here</a>
+                    <a class="btn btn-outline-light my-2 my-sm-0" type="submit" href="" id="logoutBtn" style="display: none;" role="button">Logout here</a>
+                </form>
+            </div>
+        </nav>
+        <main class="content">
+            <div class="collapse surveyInputCollapsible" id="collapseExample">
+                <div class="card card-body cardBackground">
+                    <form>
+                        <div class="form-group">
+                            <label>Enter your 1Deed idea!</label>
+                            <input type="text" class="form-control" name="ideaTitle">
+                        </div>
+                         <div class="form-group">
+                            <label>Enter a description of your deed</label>
+                            <input type="text" class="form-control" name="ideaDescription">
+                        </div>
+                        <div class="form-group">
+                            <label>Associated Link</label>
+                            <input type="test" class="form-control">
+                            <small id="emailHelp" class="form-text text-muted">Feel free to leave blank if your deed does not require a link</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a class="btn btn-dark my-2 my-sm-0" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            Cancel
+                        </a>
+                    </form>
+                </div>
+            </div>
+            <h1>Your 1Deed ideas!</h1>
+            <p>Top rated submissions will have a chance to be featured on the home page!</p>
+            <ul class="list-unstyled commentsList ideaList" id="comment-container">
+                <div>
+                    <li class="card ideaBox">
+                        <div class="card-header ideaHeader">
+                            <button type="button" id="up[0]" class="btn btn-outline-dark" 
+                            data-toggle="button" aria-pressed="false" onclick="disableDown(0)">
+                                <i class="arrow up"></i>
+                            </button>
+                            <button type="button" id="down[0]" class="btn btn-outline-dark" 
+                            data-toggle="button" aria-pressed="false" onclick="disableUp(0)">
+                                <i class="arrow down"></i>
+                            </button>
+                            <p class="ideaVoteCounter">308</p>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Read Obama’s article on How to Make this Moment the Turning Point for Real Change </h5>
+                            <p class="card-text">Obama is urging us that now is the time to act, read the article for more info</p>
+                            <a href="#" class="btn btn-dark">Associated Link</a>
+                        </div>
+                    </li>
+                    <br>
+                </div>
+                <div>
+                    <li class="card ideaBox">
+                        <div class="card-header ideaHeader">
+                            <button type="button" id="up[1]" class="btn btn-outline-dark" 
+                            data-toggle="button" aria-pressed="false" onclick="disableDown(1)">
+                                <i class="arrow up"></i>
+                            </button>
+                            <button type="button" id="down[1]" class="btn btn-outline-dark" 
+                            data-toggle="button" aria-pressed="false" onclick="disableUp(1)">
+                                <i class="arrow down"></i>
+                            </button>
+                            <p class="ideaVoteCounter">258</p>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Try to avoid eating meat today</h5>
+                            <p class="card-text">Meat plants account for the majority of carbon monoxide in our atmosphere</p>
+                        </div>
+                    </li>
+                    <br>
+                </div>
+                <div>
+                    <li class="card ideaBox">
+                        <div class="card-header ideaHeader">
+                            <button type="button" id="up[2]" class="btn btn-outline-dark" 
+                            data-toggle="button" aria-pressed="false" onclick="disableDown(2)">
+                                <i class="arrow up"></i>
+                            </button>
+                            <button type="button" id="down[2]" class="btn btn-outline-dark" 
+                            data-toggle="button" aria-pressed="false" onclick="disableUp(2)">
+                                <i class="arrow down"></i>
+                            </button>
+                            <p class="ideaVoteCounter">95</p>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Pay for someone’s meal at the drive-through</h5>
+                            <p class="card-text">Millions of Americans barely have enough money to eat, give them a favor and pay for their meal</p>
+                            <a href="#" class="btn btn-dark">Associated Link</a>
+                        </div>
+                    </li>
+                    <br>
+                </div>
+            </ul>
+        </main>
+        <!-- jquery scripts for bootstrap -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    </body>
+</html>
