@@ -63,21 +63,11 @@ test('Test getLink()', async () => {
         link: LINK_NOT_NULL
     }));
 
+    delete window.location;
+    window.location = Object.create(window);
+    window.location.href = 'null';
+
     return scriptMain.getLink().then(response => {
-        global.window = Object.create(window);
-        Object.defineProperty(window, 'location', {
-            value: {
-                href: LINK_NOT_NULL
-            }
-        });
         expect(window.location.href).toEqual(LINK_NOT_NULL);
     })
-
-    
-    
-    
-    
-    
-    
-    
 })
