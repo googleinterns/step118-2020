@@ -12,74 +12,160 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const INTERNAL_ERROR = 'Internal error. Please try again.';
+const PASS_MATCH_ERROR = {
+    code: 'password/match',
+    message: 'The passwords you entered did not match.'
+}
+const EMAIL_ID = 'email';
+const PASSWORD_ID = 'password';
+const CONFIRM_PASSWORD_ID = 'confirmPassword';
+const REGISTER_CONFIRM_ID = 'register-confirm';
+const REGISTER_ERROR_ID = 'register-error-alert';
+
+/**
+    defined with REGISTER_ prefix because on deployment, HIDE_DISPLAY interferes with
+    script-auth.js initialization of HIDE_DISPLAY but can't remove initialization here 
+    altogether because needed for testing
+*/
+const REGISTER_HIDE_DISPLAY = 'none';
+const REGISTER_SHOW_DISPLAY = 'block';
 
 function onLoad() {
-    checkLogin();
-}
-
-// check if user is logged in and redirect correspondingly
-function checkLogin() {
-    fetch('/login').then(response => response.json()).then((login) => {
-        if (login.loggedIn) {
-            document.getElementById('loginBtn').style.display = 'none';
-            document.getElementById('logoutBtn').style.display = 'block';
-            document.getElementById('logoutBtn').href = login.redirectLink;
-        }
-        else {
-            document.getElementById('loginBtn').href = login.redirectLink;
-            document.getElementById('loginBtn').style.display = 'block';
-            document.getElementById('logoutBtn').style.display = 'none';
-        }
-    });
+    authInitializeFirebase();
+    authCheckLogin();
 }
 
 // send information to /register-servlet
 function submitRegistration() {
-    var name = document.getElementById('name').value;
-    var email = document.getElementById('email').value;
+    hideAlerts();
 
-    var fetchURL = '/register-servlet?name=' + name + '&email=' + email;
+    var email = document.getElementById(EMAIL_ID).value;
+    var password = document.getElementById(PASSWORD_ID).value;
+    var confirmPassword = document.getElementById(CONFIRM_PASSWORD_ID).value;
 
-    fetch(fetchURL).then(response => response.json()).then((response) => {
-        showRegisterStatus(response);
-    });
-}
-
-// duplicated submitRegistration() for testing because needs to return the fetch to be tested or else await won't work
-function submitRegistrationForTesting() {
-    var name = document.getElementById('name').value;
-    var email = document.getElementById('email').value;
-
-    var fetchURL = '/register-servlet?name=' + name + '&email=' + email;
-
-    return fetch(fetchURL).then(response => response.json()).then((response) => {
-        showRegisterStatus(response);
-        return true;
-    });
-}
-
-function showRegisterStatus(response) {
-    // check to make sure error property exists and is a boolean
-    if(typeof response.error == 'boolean') {
-        if(response.error) {
-            document.getElementById('register-confirm').style.display = 'none';
-            document.getElementById('register-error-alert').innerHTML = response.message;
-            document.getElementById('register-error-alert').style.display = 'block';
-        }
-        else {
-            document.getElementById('register-error-alert').style.display = 'none';
-            document.getElementById('register-confirm-link').href = response.link;
-            document.getElementById('register-confirm').style.display = 'block';
-        }
+    if (password != confirmPassword) {
+        displayError(PASS_MATCH_ERROR);
     }
     else {
-        document.getElementById('register-confirm').style.display = 'none';
-        document.getElementById('register-error-alert').innerHTML = INTERNAL_ERROR;
-        document.getElementById('register-error-alert').style.display = 'block';
+        createUser(email, password);
+    }
+}
+
+// create the user
+async function createUser(email, password) {
+    try {
+        await firebase.auth().createUserWithEmailAndPassword(email, password);
+        var user = firebase.auth().currentUser;
+        sendEmailVerify(user);
+    }
+    catch(error) {
+        displayError(error);
+    }
+}
+
+// send verification email
+async function sendEmailVerify(user) {
+    try {
+        await user.sendEmailVerification();
+    }
+    catch(error) {
+        displayError(error);
+    }
+    finally {
+        signOutAfterRegistration();
+    }
+}
+
+async function signOutAfterRegistration() {
+    try {
+        await firebase.auth().signOut();
+    }
+    catch(error) {
+        // don't display error on page because sign out is automatic functionality, user doesn't know they've signed in
+        console.log(error);
+    }
+    finally {
+        showConfirm();
+    }
+}
+
+function hideAlerts() {
+    document.getElementById(REGISTER_CONFIRM_ID).style.display = REGISTER_HIDE_DISPLAY;
+    document.getElementById(REGISTER_ERROR_ID).style.display = REGISTER_HIDE_DISPLAY;
+}
+
+function displayError(error) {
+    document.getElementById(REGISTER_ERROR_ID).innerHTML = error.code + ': ' + error.message;
+    document.getElementById(REGISTER_ERROR_ID).style.display = REGISTER_SHOW_DISPLAY;
+}
+
+function showConfirm() {
+    document.getElementById(REGISTER_CONFIRM_ID).style.display = REGISTER_SHOW_DISPLAY;
+}
+
+/**
+    SLIGHTLY MODIFIED FUNCTIONS FOR TESTING
+
+    Can't directly test the functions, because firebase needs to be initialized to be defined.
+    However, to test it, it needs to be defined and then initialized.
+    This problem could be solved via a complex number of solutions, but considering short timeframe of project,
+    a more convenient testing is being sacrified for more feature development.
+*/
+async function signOutAfterRegistrationTest(user, mockFn) {
+    try {
+        await mockFn.signOut();
+        return user;
+    }
+    catch(error) {
+        // don't display error on page because sign out is automatic functionality, user doesn't know they've signed in
+        return error;
+    }
+    finally {
+        mockFn.showConfirm();
+    }
+}
+
+async function sendEmailVerifyTest(user, mockFn) {
+    try {
+        await mockFn.sendEmailVerification();
+    } catch(error) {
+        mockFn.displayError(error);
+    } finally {
+        mockFn.signOutAfterRegistration();
+    }
+}
+
+async function createUserTest(email, password, user, mockFn) {
+    try {
+        await mockFn.createUserWithEmailAndPassword(email, password);
+        mockFn.sendEmailVerify(user);
+    }
+    catch(error) {
+        mockFn.displayError(error);
+    }
+}
+
+function submitRegistrationTest(mockFn) {
+    mockFn.hideAlerts();
+
+    var email = document.getElementById(EMAIL_ID).value;
+    var password = document.getElementById(PASSWORD_ID).value;
+    var confirmPassword = document.getElementById(CONFIRM_PASSWORD_ID).value;
+
+    if (password != confirmPassword) {
+        mockFn.displayError(PASS_MATCH_ERROR);
+    }
+    else {
+        mockFn.createUser(email, password);
     }
 }
 
 module.exports = {
-    submitRegistrationForTesting: submitRegistrationForTesting
+    displayError: displayError,
+    hideAlerts: hideAlerts,
+    showConfirm: showConfirm,
+    signOutAfterRegistrationTest: signOutAfterRegistrationTest,
+    sendEmailVerifyTest: sendEmailVerifyTest,
+    createUserTest: createUserTest,
+    submitRegistrationTest: submitRegistrationTest
 }

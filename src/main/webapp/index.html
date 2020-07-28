@@ -5,7 +5,16 @@
         <title>1Deed1Day</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
         <link rel="stylesheet" href="style.css">
+        <script src="config.js"></script>
+        <script src="script-auth.js"></script>
         <script src="script.js"></script>
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-app.js"></script>
+
+        <!-- TODO: Add SDKs for Firebase products that you want to use
+            https://firebase.google.com/docs/web/setup#available-libraries -->
+        <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-analytics.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-auth.js"></script>
     </head>
     <body onload="onLoad()" class="background">
         <nav class="navbar navbar-expand-lg navbar-light" style="background: none;">
@@ -23,6 +32,9 @@
                         <a class="nav-link" href="/register.html">Register</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/past-deeds.html">Past Deeds</a>
                     </li>
                     <li class="nav-item">
@@ -30,8 +42,8 @@
                     </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0">
-                    <a class="btn btn-outline-dark my-2 my-sm-0 link" type="submit" href="" id="loginBtn" role="button">Login here</a>
-                    <a class="btn btn-outline-dark my-2 my-sm-0 link" type="submit" href="" id="logoutBtn" role="button">Logout here</a>
+                    <a class="btn btn-outline-dark my-2 my-sm-0" type="submit" href="/login.html" id="loginBtn" style="display: none;" role="button">Login here</a>
+                    <a class="btn btn-outline-dark my-2 my-sm-0" type="submit" href="#" onclick="authLogout()" id="logoutBtn" style="display: none;" role="button">Logout here</a>
                 </form>
             </div>
         </nav>

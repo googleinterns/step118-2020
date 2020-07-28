@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="style.css">
         <script src="config.js"></script>
         <script src="script-auth.js"></script>
-        <script src="script-register.js"></script>
+        <script src="script-login.js"></script>
         <!-- The core Firebase JS SDK is always required and must be listed first -->
         <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-app.js"></script>
 
@@ -15,6 +15,9 @@
             https://firebase.google.com/docs/web/setup#available-libraries -->
         <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-analytics.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-auth.js"></script>
+
+        <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+        <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
     </head>
     <body onload="onLoad()">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -28,17 +31,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/">Home</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register.html">Register</span></a>
+                    </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">Register <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login.html">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/past-deeds.html">Past Deeds</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/surveyInput.html">Community</a>
+                        <a class="nav-link" href="#">Login <span class="sr-only">(current)</a>
                     </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0">
@@ -48,28 +45,9 @@
             </div>
         </nav>
         <main class="content">
-            <h1>Registration</h1>
-            <p>Please enter an email and password to register! Please note that this registration is only for those without a Gmail account. If you'd like to sign in directly with your Gmail account, please login <a href="/login.html" class="alert-link" id="register-confirm-link">here</a>.</p>
-            <div class="alert alert-danger" role="alert" id="register-error-alert" style="display: none;">
-            </div>
-            <div class="alert alert-success" role="alert" id="register-confirm" style="display: none;">
-                You've registered! Verify your email in your inbox and then login <a href="/login.html" class="alert-link" id="register-confirm-link">here</a>.
-            </div>
-            <form>
-                <div class="form-group">
-                    <label for="email">Email address</label>
-                    <input type="email" class="form-control" id="email" name="email">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" name="password">
-                </div>
-                <div class="form-group">
-                    <label for="confirmPassword">Confirm password</label>
-                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-                </div>
-                <button type="button" class="btn btn-primary" onclick="submitRegistration()">Register</button>
-            </form>
+            <h1>Login</h1>
+            <p id="disclaimer" style="display: none;">If you don't have a Gmail account, please register <a href="/register.html" class="alert-link" id="register-confirm-link">here</a>. Otherwise, you can log directly into 1Deed1Day with your Gmail credentials.</p>
+            <div id="firebaseui-auth-container"></div>
         </main>
 
         <!-- jquery scripts for bootstrap -->
