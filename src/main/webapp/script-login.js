@@ -1,3 +1,20 @@
+/**
+    defined with LOGIN_ prefix because on deployment, LOGIN_BTN_ID interferes with
+    script-auth.js initialization of LOGIN_BTN_ID but can't remove initialization here 
+    altogether because needed for testing
+*/
+const LOGIN_LOGIN_BTN_ID = 'loginBtn';
+const LOGIN_LOGOUT_BTN_ID = 'logoutBtn';
+const LOGIN_HIDE_DISPLAY = 'none';
+const LOGIN_SHOW_DISPLAY = 'block';
+
+const DISCLAIMER_ID = 'disclaimer';
+const FIREBASE_CONTAINER_ID = 'firebaseui-auth-container';
+
+const ROOT_DIRECTORY = '/';
+
+const LOGGED_IN_MESSAGE = 'You have already logged in. Log out to sign in with a different account!';
+
 // initialize the firebase and the UI
 function onLoad() {
     authInitializeFirebase();
@@ -18,21 +35,21 @@ function checkLoginWithUI() {
 
 // show login button with UI, because user is not logged in
 function showLogoutNoUI() {
-    document.getElementById('loginBtn').style.display = 'none';
-    document.getElementById('logoutBtn').style.display = 'block';
+    document.getElementById(LOGIN_LOGIN_BTN_ID).style.display = LOGIN_HIDE_DISPLAY;
+    document.getElementById(LOGIN_LOGOUT_BTN_ID).style.display = LOGIN_SHOW_DISPLAY;
 
-    document.getElementById('disclaimer').style.display = 'none';
+    document.getElementById(DISCLAIMER_ID).style.display = LOGIN_HIDE_DISPLAY;
 
     // if logged in, display this message
-    document.getElementById('firebaseui-auth-container').innerHTML = 'You have already logged in. Log out to sign in with a different account!';
+    document.getElementById(FIREBASE_CONTAINER_ID).innerHTML = LOGGED_IN_MESSAGE;
 }
 
 // show logout button without UI, because user is logged in
 function showLoginAndUI() {
-    document.getElementById('loginBtn').style.display = 'block';
-    document.getElementById('logoutBtn').style.display = 'none';
+    document.getElementById(LOGIN_LOGIN_BTN_ID).style.display = LOGIN_SHOW_DISPLAY;
+    document.getElementById(LOGIN_LOGOUT_BTN_ID).style.display = LOGIN_HIDE_DISPLAY;
 
-    document.getElementById('disclaimer').style.display = 'block';
+    document.getElementById(DISCLAIMER_ID).style.display = LOGIN_SHOW_DISPLAY;
 
     // if not logged in, display login UI
     initializeFirebaseUI();
@@ -41,12 +58,12 @@ function showLoginAndUI() {
 // initialize drop-in UI for firebase
 function initializeFirebaseUI() {
     //clear container
-    document.getElementById('firebaseui-auth-container').innerHTML = '';
+    document.getElementById(FIREBASE_CONTAINER_ID).innerHTML = '';
     
     var ui = new firebaseui.auth.AuthUI(firebase.auth());
 
-    ui.start('#firebaseui-auth-container', {
-        signInSuccessUrl: '/',
+    ui.start('#' + FIREBASE_CONTAINER_ID, {
+        signInSuccessUrl: ROOT_DIRECTORY,
         signInOptions: [
             firebase.auth.EmailAuthProvider.PROVIDER_ID,
             firebase.auth.GoogleAuthProvider.PROVIDER_ID
@@ -54,12 +71,19 @@ function initializeFirebaseUI() {
     });
 }
 
-/** SLIGHTLY MODIFIED FUNCTIONS FOR TESTING */
-function showLoginAndUITest(mockFn) {
-    document.getElementById('loginBtn').style.display = 'block';
-    document.getElementById('logoutBtn').style.display = 'none';
+/**
+    SLIGHTLY MODIFIED FUNCTIONS FOR TESTING
 
-    document.getElementById('disclaimer').style.display = 'block';
+    Can't directly test the functions, because firebase needs to be initialized to be defined.
+    However, to test it, it needs to be defined and then initialized.
+    This problem could be solved via a complex number of solutions, but considering short timeframe of project,
+    a more convenient testing is being sacrified for more feature development.
+*/
+function showLoginAndUITest(mockFn) {
+    document.getElementById(LOGIN_LOGIN_BTN_ID).style.display = LOGIN_SHOW_DISPLAY;
+    document.getElementById(LOGIN_LOGOUT_BTN_ID).style.display = LOGIN_HIDE_DISPLAY;
+
+    document.getElementById(DISCLAIMER_ID).style.display = LOGIN_SHOW_DISPLAY;
 
     // if not logged in, display login UI
     mockFn.initializeFirebaseUI();

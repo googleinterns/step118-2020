@@ -1,14 +1,18 @@
-// firebase configuration details (nonsecret)
-var firebaseConfig = {
-    apiKey: "AIzaSyDkYtj0ZlLE4ggunFI8c6ov_wnVuDUsY6Y",
-    authDomain: "wear-systems-interns-step-2020.firebaseapp.com",
-    databaseURL: "https://wear-systems-interns-step-2020.firebaseio.com",
-    projectId: "wear-systems-interns-step-2020",
-    storageBucket: "wear-systems-interns-step-2020.appspot.com",
-    messagingSenderId: "372274219809",
-    appId: "1:372274219809:web:5eba81e89b21d1355e4c60",
-    measurementId: "G-EHL6SKF61R"
-};
+var firebaseConfig;
+
+try {
+    // if in development environment, try goes through because uses node.js, and firebaseConfig = FIREBASE_CONFIG
+    firebaseConfig = require('./config');
+}
+catch {
+    // if not in development environment, try returns an error, but config.js is defined earlier in the .html file
+    firebaseConfig = FIREBASE_CONFIG;
+}
+
+const LOGIN_BTN_ID = 'loginBtn';
+const LOGOUT_BTN_ID = 'logoutBtn';
+const HIDE_DISPLAY = 'none';
+const SHOW_DISPLAY = 'block';
 
 // initialize firebase
 function authInitializeFirebase() {
@@ -20,11 +24,11 @@ function authInitializeFirebase() {
 function authCheckLogin() {
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
-            document.getElementById('loginBtn').style.display = 'none';
-            document.getElementById('logoutBtn').style.display = 'block';
+            document.getElementById(LOGIN_BTN_ID).style.display = HIDE_DISPLAY;
+            document.getElementById(LOGOUT_BTN_ID).style.display = SHOW_DISPLAY;
         } else {
-            document.getElementById('loginBtn').style.display = 'block';
-            document.getElementById('logoutBtn').style.display = 'none';
+            document.getElementById(LOGIN_BTN_ID).style.display = SHOW_DISPLAY;
+            document.getElementById(LOGOUT_BTN_ID).style.display = HIDE_DISPLAY;
         }
     });
 }
@@ -40,15 +44,22 @@ async function authLogout() {
     }
 }
 
-/** SLIGHTLY MODIFIED FUNCTIONS FOR TESTING */
+/**
+    SLIGHTLY MODIFIED FUNCTIONS FOR TESTING
+
+    Can't directly test the functions, because firebase needs to be initialized to be defined.
+    However, to test it, it needs to be defined and then initialized.
+    This problem could be solved via a complex number of solutions, but considering short timeframe of project,
+    a more convenient testing is being sacrified for more feature development.
+*/
 function authCheckLoginTest(mockFn) {
     mockFn.onAuthStateChanged(function(user) {
         if (user) {
-            document.getElementById('loginBtn').style.display = 'none';
-            document.getElementById('logoutBtn').style.display = 'block';
+            document.getElementById(LOGIN_BTN_ID).style.display = HIDE_DISPLAY;
+            document.getElementById(LOGOUT_BTN_ID).style.display = SHOW_DISPLAY;
         } else {
-            document.getElementById('loginBtn').style.display = 'block';
-            document.getElementById('logoutBtn').style.display = 'none';
+            document.getElementById(LOGIN_BTN_ID).style.display = SHOW_DISPLAY;
+            document.getElementById(LOGOUT_BTN_ID).style.display = HIDE_DISPLAY;
         }
     });
 }

@@ -1,5 +1,10 @@
 const scriptAuth = require('../../main/webapp/script-auth');
 
+const LOGIN_BTN_ID = 'loginBtn';
+const LOGOUT_BTN_ID = 'logoutBtn';
+const HIDE_DISPLAY = 'none';
+const SHOW_DISPLAY = 'block';
+
 const ERROR_OBJ = new Error('test/code');
 const TEST_USER = {
     displayName: 'test',
@@ -38,8 +43,8 @@ test('authCheckLogin() displays logout button when user is logged in', () => {
     // run authCheckLogin with user
     scriptAuth.authCheckLoginTest(mockFn);
 
-    expect(document.getElementById('loginBtn').style.display).toEqual('none');
-    expect(document.getElementById('logoutBtn').style.display).toEqual('block');
+    expect(document.getElementById(LOGIN_BTN_ID).style.display).toEqual(HIDE_DISPLAY);
+    expect(document.getElementById(LOGOUT_BTN_ID).style.display).toEqual(SHOW_DISPLAY);
 });
 
 test('authCheckLogin() displays login button when user is logged out', () => {
@@ -57,8 +62,8 @@ test('authCheckLogin() displays login button when user is logged out', () => {
     // run authCheckLogin without a user
     scriptAuth.authCheckLoginTest(mockFn);
 
-    expect(document.getElementById('loginBtn').style.display).toEqual('block');
-    expect(document.getElementById('logoutBtn').style.display).toEqual('none');
+    expect(document.getElementById(LOGIN_BTN_ID).style.display).toEqual(SHOW_DISPLAY);
+    expect(document.getElementById(LOGOUT_BTN_ID).style.display).toEqual(HIDE_DISPLAY);
 });
 
 test('authLogout() updates the login/logout button', async () => {

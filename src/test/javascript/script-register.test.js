@@ -14,6 +14,15 @@
 
 const scriptRegister = require('../../main/webapp/script-register');
 
+const REGISTER_ERROR_ID = 'register-error-alert';
+const REGISTER_CONFIRM_ID = 'register-confirm';
+const EMAIL_ID = 'email';
+const PASSWORD_ID = 'password';
+const CONFIRM_PASSWORD_ID = 'confirmPassword';
+
+const SHOW_DISPLAY = 'block';
+const HIDE_DISPLAY = 'none';
+
 const ERROR_CODE = 'test/code';
 const ERROR_MESSAGE = 'There is an error';
 const ERROR = {
@@ -79,9 +88,9 @@ test('displayError() correctly shows the error', () => {
 
     scriptRegister.displayError(ERROR);
 
-    expect(document.getElementById('register-error-alert').style.display).toBe('block');
-    expect(document.getElementById('register-error-alert').innerHTML).toBe(ERROR_CODE + ': ' + ERROR_MESSAGE);
-    expect(document.getElementById('register-confirm').style.display).toBe('none');
+    expect(document.getElementById(REGISTER_ERROR_ID).style.display).toBe(SHOW_DISPLAY);
+    expect(document.getElementById(REGISTER_ERROR_ID).innerHTML).toBe(ERROR_CODE + ': ' + ERROR_MESSAGE);
+    expect(document.getElementById(REGISTER_CONFIRM_ID).style.display).toBe(HIDE_DISPLAY);
 });
 
 
@@ -89,13 +98,13 @@ test('hideAlerts() correctly hides all alerts', () => {
     document.body.innerHTML = TEST_HTML;
 
     // show both alerts
-    document.getElementById('register-error-alert').style.display = 'block';
-    document.getElementById('register-confirm').style.display = 'block';
+    document.getElementById(REGISTER_ERROR_ID).style.display = SHOW_DISPLAY;
+    document.getElementById(REGISTER_CONFIRM_ID).style.display = SHOW_DISPLAY;
 
     scriptRegister.hideAlerts();
 
-    expect(document.getElementById('register-error-alert').style.display).toBe('none');
-    expect(document.getElementById('register-confirm').style.display).toBe('none');
+    expect(document.getElementById(REGISTER_ERROR_ID).style.display).toBe(HIDE_DISPLAY);
+    expect(document.getElementById(REGISTER_CONFIRM_ID).style.display).toBe(HIDE_DISPLAY);
 });
 
 
@@ -104,7 +113,7 @@ test('showConfirm() correctly shows confirmation', () => {
 
     scriptRegister.showConfirm();
 
-    expect(document.getElementById('register-confirm').style.display).toBe('block');
+    expect(document.getElementById(REGISTER_CONFIRM_ID).style.display).toBe(SHOW_DISPLAY);
 })
 
 
@@ -239,9 +248,9 @@ test('test submitRegistration() without error', async () => {
     document.body.innerHTML = TEST_HTML;
     
     // set input values for name and email
-    document.getElementById('email').value = EMAIL;
-    document.getElementById('password').value = PASS_1;
-    document.getElementById('confirmPassword').value = PASS_1;
+    document.getElementById(EMAIL_ID).value = EMAIL;
+    document.getElementById(PASSWORD_ID).value = PASS_1;
+    document.getElementById(CONFIRM_PASSWORD_ID).value = PASS_1;
 
     const mockFn = {
         createUser: createUserMockFn,
@@ -261,9 +270,9 @@ test('test submitRegistration() with error, passwords don\'t match', async () =>
     document.body.innerHTML = TEST_HTML;
     
     // set input values for name and email
-    document.getElementById('email').value = EMAIL;
-    document.getElementById('password').value = PASS_1;
-    document.getElementById('confirmPassword').value = PASS_2;
+    document.getElementById(EMAIL_ID).value = EMAIL;
+    document.getElementById(PASSWORD_ID).value = PASS_1;
+    document.getElementById(CONFIRM_PASSWORD_ID).value = PASS_2;
 
     const mockFn = {
         createUser: createUserMockFn,
