@@ -26,8 +26,9 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
- 
-import com.google.sps.data.Comment;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
  
 import java.util.List;
 import java.util.ArrayList;
@@ -43,8 +44,15 @@ import java.io.IOException;
  */
 @WebServlet("/comments")
 public class CommentServlet extends HttpServlet {
- 
-    private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    private static final String COMMENTS_PROPERTY = "Comments"; //The name of the property storing the comments
+    private static final String JSON_CONTENT_TYPE = "application/json;";
+    private static final String COMMENT_FORM_NAME = "newComment"; //The name of the form where users enter comments
+    private static final String WEBAPP_HOME = "/index.html";
+    private static final String DAILY_DEED = "Daily Deed";
+    private static final String TRUE = "true";
+    private static final String GOOD_DEED = "GoodDeed";
+
+    private static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private Gson gson = new Gson();
  
  
@@ -53,38 +61,58 @@ public class CommentServlet extends HttpServlet {
      */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
-        Query query = new Query("Comments").addSort("timestamp", SortDirection.DESCENDING);
-        PreparedQuery userComments = datastore.prepare(query);
-  
-        List<Comment> comments = new ArrayList<>();
- 
-        for (Entity curComment : userComments.asIterable()) {
-            long id = curComment.getKey().getId();
-            String text = (String) curComment.getProperty("comment");
-            long timestamp = (long) curComment.getProperty("timestamp");
- 
-            Comment comment = new Comment(id, text, timestamp);
-            comments.add(comment);
-        }
+        Entity currentDeed = getCurrentDeed();
+        List userComments = (List) currentDeed.getProperty(COMMENTS_PROPERTY);
+        List<String> comments = new ArrayList<>();
+
+        comments.addAll(userComments);
         
-        response.setContentType("application/json;");       
+        response.setContentType(JSON_CONTENT_TYPE);       
         response.getWriter().println(gson.toJson(comments));
     }
  
     /*
-     * Allows a user to enter a new comment, grabs the comment, and creates space for it in the datastore
+     * Allows a user to enter a new comment, grabs the comment, and enters it into the current deed's
+     * comments property
      */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String newComment = request.getParameter("newComment");
+        String newComment = request.getParameter(COMMENT_FORM_NAME);
         long timestamp = System.currentTimeMillis(); // Used in case we need to sort the comments by time
  
-        Entity commentEntity = new Entity("Comments");
-        commentEntity.setProperty("comment", newComment);
-        commentEntity.setProperty("timestamp", timestamp);
- 
-        datastore.put(commentEntity);
-        response.sendRedirect("/index.html"); // Sends users back to the home page after entering a comment
+        addComment(newComment);
+        response.sendRedirect(WEBAPP_HOME); // Sends users back to the home page after entering a comment
+    }
+
+    
+    /*
+     * Adds a comment to the current deed's comments property
+     */
+    private void addComment(String newComment) {
+        Entity currentDeed = getCurrentDeed();
+        List userComments = (List) currentDeed.getProperty(COMMENTS_PROPERTY); 
+
+        if (userComments == null || userComments.isEmpty()) {
+            userComments = new ArrayList<>();
+        }
+        
+        userComments.add(0, newComment);
+
+        currentDeed.setProperty(COMMENTS_PROPERTY, userComments);
+        datastore.put(currentDeed);
+    }
+
+    /*
+     * Gets the current Deed of the day
+     * Note: copied over from GoodDeedServlet.fetchDailyDeed() but tweaked a little
+     */
+    protected Entity getCurrentDeed() {
+        Filter propertyFilter = new FilterPredicate(DAILY_DEED, FilterOperator.EQUAL, TRUE);
+        Query query = new Query(GOOD_DEED).setFilter(propertyFilter);
+        PreparedQuery results = datastore.prepare(query);
+
+        Entity currentDeed = results.asSingleEntity();
+        return currentDeed;
     }
 }
 
