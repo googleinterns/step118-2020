@@ -9,6 +9,7 @@ catch {
     firebaseConfig = FIREBASE_CONFIG;
 }
 
+const LOGIN_URL = '/login.html';
 const LOGIN_BTN_ID = 'loginBtn';
 const LOGOUT_BTN_ID = 'logoutBtn';
 const HIDE_DISPLAY = 'none';
@@ -21,17 +22,26 @@ function authInitializeFirebase() {
 }
 
 // check if user is logged in and show buttons accordingly
-function authCheckLogin() {
+function authCheckLogin(restrictedAccess, loggedInFunction) {
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
             document.getElementById(LOGIN_BTN_ID).style.display = HIDE_DISPLAY;
             document.getElementById(LOGOUT_BTN_ID).style.display = SHOW_DISPLAY;
+
+            if(loggedInFunction != null) {
+                loggedInFunction();
+            }
         } else {
             document.getElementById(LOGIN_BTN_ID).style.display = SHOW_DISPLAY;
             document.getElementById(LOGOUT_BTN_ID).style.display = HIDE_DISPLAY;
+
+            if(restrictedAccess) {
+                window.location.replace(LOGIN_URL);
+            }
         }
     });
 }
+
 
 // sign the user out
 async function authLogout() {
@@ -52,14 +62,22 @@ async function authLogout() {
     This problem could be solved via a complex number of solutions, but considering short timeframe of project,
     a more convenient testing is being sacrified for more feature development.
 */
-function authCheckLoginTest(mockFn) {
+function authCheckLoginTest(restrictedAccess, loggedInFunction, mockFn) {
     mockFn.onAuthStateChanged(function(user) {
         if (user) {
             document.getElementById(LOGIN_BTN_ID).style.display = HIDE_DISPLAY;
             document.getElementById(LOGOUT_BTN_ID).style.display = SHOW_DISPLAY;
+
+            if(loggedInFunction != null) {
+                loggedInFunction();
+            }
         } else {
             document.getElementById(LOGIN_BTN_ID).style.display = SHOW_DISPLAY;
             document.getElementById(LOGOUT_BTN_ID).style.display = HIDE_DISPLAY;
+
+            if(restrictedAccess) {
+                window.location.href = LOGIN_URL;
+            }
         }
     });
 }
