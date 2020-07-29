@@ -48,7 +48,7 @@ public class PastDeedsServlet extends HttpServlet {
     private static final String POSTED_YET = "Posted Yet";
     private static final String LINK = "Link";
     private static final String TIME_STAMP = "Timestamp";
-    private static final List<GoodDeed> = deeds;
+    private static List<GoodDeed> deeds;
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
