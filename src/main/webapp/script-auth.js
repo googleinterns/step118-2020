@@ -29,7 +29,7 @@ function authCheckLogin(restrictedAccess, loggedInFunction) {
             document.getElementById(LOGOUT_BTN_ID).style.display = SHOW_DISPLAY;
 
             if(loggedInFunction != null) {
-                loggedInFunction();
+                loggedInFunction(user);
             }
         } else {
             document.getElementById(LOGIN_BTN_ID).style.display = SHOW_DISPLAY;
@@ -69,7 +69,7 @@ function authCheckLoginTest(restrictedAccess, loggedInFunction, mockFn) {
             document.getElementById(LOGOUT_BTN_ID).style.display = SHOW_DISPLAY;
 
             if(loggedInFunction != null) {
-                loggedInFunction();
+                loggedInFunction(user);
             }
         } else {
             document.getElementById(LOGIN_BTN_ID).style.display = SHOW_DISPLAY;

@@ -22,10 +22,10 @@ const TEST_USER = {
 
 const authCheckLoginMockFn = jest.fn();
 const onAuthStateChangedMockFnLoggedOut = jest.fn(getUserFunc => {
-        getUserFunc(false);
+        getUserFunc();
     });
 const onAuthStateChangedMockFnLoggedIn = jest.fn(getUserFunc => {
-        getUserFunc(true);
+        getUserFunc(TEST_USER);
     });
 
 // keep selective parts of navbar and login
@@ -129,6 +129,7 @@ test('authCheckLogin() calls loggedInFunction when logged in and a function is p
     scriptAuth.authCheckLoginTest(OPEN_ACCESS, loggedInFunction, mockFn);
 
     expect(loggedInFunction).toHaveBeenCalledTimes(1);
+    expect(loggedInFunction).toHaveBeenCalledWith(TEST_USER);
 });
 
 test('authLogout() updates the login/logout button', async () => {
