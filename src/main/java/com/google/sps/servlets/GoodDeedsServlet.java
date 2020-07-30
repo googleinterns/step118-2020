@@ -49,6 +49,7 @@ public class GoodDeedsServlet extends HttpServlet {
     private static final String CONTENT_TYPE_JSON = "application/json";
     private static final String REDIRECT_HOMEPAGE = "/index.html";
     private static final String DAILY_DEED = "Daily Deed";
+    private static final String COMMENTS = "Comments";
     
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -68,6 +69,7 @@ public class GoodDeedsServlet extends HttpServlet {
         String description = getParameter(request, DESCRIPTION, DEFAULT_VALUE);
         String link = getParameter(request, LINK, DEFAULT_VALUE);
         long timestamp = System.currentTimeMillis();
+        List<String> comments = new ArrayList<>();
  
         Entity deedEntity = new Entity(GOOD_DEED);
         deedEntity.setProperty(NAME, name);
@@ -76,6 +78,7 @@ public class GoodDeedsServlet extends HttpServlet {
         deedEntity.setProperty(DAILY_DEED, FALSE);
         deedEntity.setProperty(TIME_STAMP, timestamp);
         deedEntity.setProperty(LINK, link);
+        deedEntity.setProperty(COMMENTS, comments);
  
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         datastore.put(deedEntity);

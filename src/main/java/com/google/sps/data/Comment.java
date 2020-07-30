@@ -24,9 +24,20 @@ public final class Comment {
     private final long timestamp;
  
     public Comment(long id, String comment, long timestamp) {
+        if (comment == null || comment.isEmpty()) {
+            throw new IllegalArgumentException("Invalid comment, must have some text");
+        }
         this.id = id;
         this.comment = comment;
         this.timestamp = timestamp;
+  }
+
+  public String getComment() {
+      return this.comment;
+  }
+
+  public long getTimestamp()  {
+      return this.timestamp;
   }
 }
 
