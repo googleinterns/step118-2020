@@ -115,8 +115,8 @@ public class SurveyInputServlet extends HttpServlet {
     /**
      * Checks if the user's string is not empty
      */
-    public boolean isValid(String comment) {
-      return !comment.isEmpty() && !comment.isBlank() && !(comment == null);
+    public boolean isValid(String text) {
+      return text != null && !text.isEmpty() && !text.isBlank();
    }
 }
 
