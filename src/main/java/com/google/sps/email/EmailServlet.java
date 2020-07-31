@@ -64,14 +64,14 @@ public class EmailServlet extends HttpServlet {
         
         GoodDeed daily_deed = deedServlet.fetchDailyDeed();
         List<String> emails = fetchEmails();
-        for(String email : emails) {
-            sendEmail(daily_deed, email);
-        }
+            
+        sendEmail(daily_deed, emails);
+        
         System.out.println("Email Sent");
         response.sendRedirect("/index.html");
     }
 
-    void sendEmail(GoodDeed deed, String email) {
+    void sendEmail(GoodDeed deed, List<String> emails) {
         
         Properties properties = new Properties();
         
@@ -103,7 +103,11 @@ public class EmailServlet extends HttpServlet {
             msg.setFrom(new InternetAddress(USERNAME));
 
             // Send to all recipients
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(USERNAME));
+
+            for (String email : emails) {
+                msg.addRecipients(Message.RecipientType.BCC, InternetAddress.parse(email));
+            }
 
             // Subject
             msg.setSubject(EMAIL_SUBJECT);
