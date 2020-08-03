@@ -50,6 +50,11 @@ users enter their ideas*/
     margin: auto;
 }
 
+.pastDeeds {
+    align-items: center;
+    justify-content: center;
+}
+
 main {
     padding-top: 65px;
 }
