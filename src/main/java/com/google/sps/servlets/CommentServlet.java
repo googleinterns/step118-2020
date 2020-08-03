@@ -80,7 +80,8 @@ public class CommentServlet extends HttpServlet {
         String newComment = request.getParameter(COMMENT_FORM_NAME);
         long timestamp = System.currentTimeMillis(); // Used in case we need to sort the comments by time
  
-        addComment(newComment);
+        if(isValid(newComment))
+            addComment(newComment);
         response.sendRedirect(WEBAPP_HOME); // Sends users back to the home page after entering a comment
     }
 
@@ -114,5 +115,12 @@ public class CommentServlet extends HttpServlet {
         Entity currentDeed = results.asSingleEntity();
         return currentDeed;
     }
+
+    /**
+     * Checks if the user's string is not empty
+     */
+    public boolean isValid(String text) {
+      return text != null && !text.isEmpty();
+   }
 }
 

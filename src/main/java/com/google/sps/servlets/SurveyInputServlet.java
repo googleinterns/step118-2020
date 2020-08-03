@@ -98,6 +98,14 @@ public class SurveyInputServlet extends HttpServlet {
         String newIdeaDescription = request.getParameter(FORM_IDEA_DESCRIPTION);
         long timestamp = System.currentTimeMillis(); 
 
+        addIdea(newIdeaTitle, newIdeaDescription, timestamp);
+        response.sendRedirect(WEBAPP_SURVEY_INPUT); // Sends users back to the survey input page
+    }
+
+    /*
+     * Creates the entitiy and puts the idea in the datastore
+     */
+    public void addIdea(String newIdeaTitle, String newIdeaDescription, long timestamp) {
         if (isValid(newIdeaTitle)) {
             if (isValid(newIdeaDescription)) {
                 Entity ideaEntity = new Entity(USER_DEED_ENTITY);
@@ -108,15 +116,14 @@ public class SurveyInputServlet extends HttpServlet {
 
                 datastore.put(ideaEntity);
             }
-      }
-        response.sendRedirect(WEBAPP_SURVEY_INPUT); // Sends users back to the survey input page
+        }
     }
 
     /**
      * Checks if the user's string is not empty
      */
     public boolean isValid(String text) {
-      return text != null && !text.isEmpty() && !text.isBlank();
+      return text != null && !text.isEmpty();
    }
 }
 
