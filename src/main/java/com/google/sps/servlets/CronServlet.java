@@ -77,7 +77,8 @@ public class CronServlet extends HttpServlet {
     void resetDailyDeed() {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-        Query query = new Query(GOOD_DEED);
+        Filter propertyFilter = new FilterPredicate(DAILY_DEED, FilterOperator.EQUAL, TRUE);
+        Query query = new Query(GOOD_DEED).setFilter(propertyFilter);
  
         PreparedQuery results = datastore.prepare(query);
  
@@ -89,6 +90,7 @@ public class CronServlet extends HttpServlet {
 
     void resetPostedYet(DatastoreService datastore) {
         Query query = new Query(GOOD_DEED);
+        Filter propertyFilter = new FilterPredicate(POSTED_YET, FilterOperator.EQUAL, TRUE);
         PreparedQuery results = datastore.prepare(query);
  
         for (Entity deed : results.asIterable()) {

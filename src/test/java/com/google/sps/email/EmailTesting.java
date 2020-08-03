@@ -49,6 +49,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.jvnet.mock_javamail.Mailbox;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import com.google.sps.testing.EmailServlet;
 import com.google.sps.testing.GoodDeed;
@@ -128,8 +129,11 @@ public class EmailTesting {
             new GoodDeed(testEntity.getKey(), testEntity.getKey().getId(), TITLE, DESCRIPTION_INPUT, FALSE, TIMESTAMP_INPUT, LINK);
         
         String content = deed.getTitle() + ":\n" + deed.getDescription();
+
+        List<String> emails = new ArrayList<>();
+        emails.add(EMAIL_INPUT);
         
-        emailServlet.sendEmail(deed, EMAIL_INPUT);
+        emailServlet.sendEmail(deed, emails);
 
         List<Message> inbox = Mailbox.get(EMAIL_INPUT);
   
