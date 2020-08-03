@@ -62,27 +62,29 @@ public class VoteServlet extends HttpServlet {
         String[] voteValues = request.getParameterValues(IDEA_VOTE_VALUE); //all of the submitted votes
         String[] ideaIds = request.getParameterValues(IDEA_ID); //all of the ids of the ideas voted on
 
-        for(int i = 0; i < ideaIds.length; i++) { //traverse all the submitted votes
+        if (ideaIds != null) {
+            for(int i = 0; i < ideaIds.length; i++) { //traverse all the submitted votes
 
-            String voteValue = voteValues[i]; //get the current vote value "up" or "down"
-            Long ideaId = Long.parseLong(ideaIds[i]); //id to access the specific idea
+                String voteValue = voteValues[i]; //get the current vote value "up" or "down"
+                Long ideaId = Long.parseLong(ideaIds[i]); //id to access the specific idea
 
-            Entity userIdea = null;
+                Entity userIdea = null;
 
-            /*Note: Ideally this would be just one line getting the entity from 
-            the datastore using its id, but I couldn't figure out how to do that.
-            If anyone knows, please replace this for loop with that*/
-            for (Entity entity : userIdeas.asIterable()) {
-                if (entity.getKey().getId() == ideaId) {
-                    userIdea = entity;
-                    break;
+                /*Note: Ideally this would be just one line getting the entity from 
+                the datastore using its id, but I couldn't figure out how to do that.
+                If anyone knows, please replace this for loop with that*/
+                for (Entity entity : userIdeas.asIterable()) {
+                    if (entity.getKey().getId() == ideaId) {
+                        userIdea = entity;
+                        break;
+                    }
                 }
-            }
 
-            long currentVotes = (long) userIdea.getProperty(USER_DEED_VOTES);
-            
-            userIdea.setProperty(USER_DEED_VOTES, determineVoteValue(voteValue, currentVotes));
-            datastore.put(userIdea);
+                long currentVotes = (long) userIdea.getProperty(USER_DEED_VOTES);
+                
+                userIdea.setProperty(USER_DEED_VOTES, determineVoteValue(voteValue, currentVotes));
+                datastore.put(userIdea);
+            }
         }
             
 
