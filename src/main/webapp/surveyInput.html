@@ -22,6 +22,12 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/register.html">Register</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/past-deeds.html">PastDeeds</a>
+                    </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="#">Community<span class="sr-only">(current)</span></a>
                     </li>
@@ -29,6 +35,11 @@
                 <form class="form-inline my-2 my-lg-0 surveyInputButton">
                     <a class="btn btn-outline-light my-2 my-sm-0" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                         Have an idea? Submit it here!
+                    </a>
+                </form>
+                <form class="form-inline my-2 my-lg-0">
+                    <a class="btn btn-outline-light my-2 my-sm-0" onclick="submitVotes()" href="#collapseExample" role="button">
+                        Submit Votes
                     </a>
                 </form>
                 <form class="form-inline my-2 my-lg-0">
@@ -40,7 +51,7 @@
         <main class="content">
             <div class="collapse surveyInputCollapsible" id="collapseExample">
                 <div class="card card-body cardBackground">
-                    <form>
+                    <form action="/survey-input" method="POST">
                         <div class="form-group">
                             <label>Enter your 1Deed idea!</label>
                             <input type="text" class="form-control" name="ideaTitle">
@@ -48,11 +59,6 @@
                          <div class="form-group">
                             <label>Enter a description of your deed</label>
                             <input type="text" class="form-control" name="ideaDescription">
-                        </div>
-                        <div class="form-group">
-                            <label>Associated Link</label>
-                            <input type="test" class="form-control">
-                            <small id="emailHelp" class="form-text text-muted">Feel free to leave blank if your deed does not require a link</small>
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                         <a class="btn btn-dark my-2 my-sm-0" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -63,70 +69,33 @@
             </div>
             <h1>Your 1Deed ideas!</h1>
             <p>Top rated submissions will have a chance to be featured on the home page!</p>
-            <ul class="list-unstyled commentsList ideaList" id="comment-container">
-                <div>
-                    <li class="card ideaBox">
-                        <div class="card-header ideaHeader">
-                            <button type="button" id="up[0]" class="btn btn-outline-dark" 
-                            data-toggle="button" aria-pressed="false" onclick="disableDown(0)">
+            <form id="votesForm" action="/vote-input" method="POST">
+            <ul class="list-unstyled commentsList ideaList" id="ideas-container"></ul>
+            </form>
+            <div id="userIdeasTemplate" style="display: none;">
+                <li class="card ideaBox">
+                    <div class="card-header ideaHeader" id="header0">
+                            <button type="button" name ="upVote" id="up[0]" class="btn btn-outline-dark" 
+                            data-toggle="button" aria-pressed="false" onclick="clickedUp(0)">
                                 <i class="arrow up"></i>
+                                <p id="hasClickedUp0" style="display: none;"></p>
                             </button>
-                            <button type="button" id="down[0]" class="btn btn-outline-dark" 
-                            data-toggle="button" aria-pressed="false" onclick="disableUp(0)">
+                            <button type="button" name="downVote" id="down[0]" class="btn btn-outline-dark" 
+                            data-toggle="button" aria-pressed="false" onclick="clickedDown(0)">
                                 <i class="arrow down"></i>
+                                <p id="hasClickedDown0" style="display: none;"></p>
                             </button>
-                            <p class="ideaVoteCounter">308</p>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Read Obama’s article on How to Make this Moment the Turning Point for Real Change </h5>
-                            <p class="card-text">Obama is urging us that now is the time to act, read the article for more info</p>
-                            <a href="#" class="btn btn-dark">Associated Link</a>
-                        </div>
-                    </li>
-                    <br>
-                </div>
-                <div>
-                    <li class="card ideaBox">
-                        <div class="card-header ideaHeader">
-                            <button type="button" id="up[1]" class="btn btn-outline-dark" 
-                            data-toggle="button" aria-pressed="false" onclick="disableDown(1)">
-                                <i class="arrow up"></i>
-                            </button>
-                            <button type="button" id="down[1]" class="btn btn-outline-dark" 
-                            data-toggle="button" aria-pressed="false" onclick="disableUp(1)">
-                                <i class="arrow down"></i>
-                            </button>
-                            <p class="ideaVoteCounter">258</p>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Try to avoid eating meat today</h5>
-                            <p class="card-text">Meat plants account for the majority of carbon monoxide in our atmosphere</p>
-                        </div>
-                    </li>
-                    <br>
-                </div>
-                <div>
-                    <li class="card ideaBox">
-                        <div class="card-header ideaHeader">
-                            <button type="button" id="up[2]" class="btn btn-outline-dark" 
-                            data-toggle="button" aria-pressed="false" onclick="disableDown(2)">
-                                <i class="arrow up"></i>
-                            </button>
-                            <button type="button" id="down[2]" class="btn btn-outline-dark" 
-                            data-toggle="button" aria-pressed="false" onclick="disableUp(2)">
-                                <i class="arrow down"></i>
-                            </button>
-                            <p class="ideaVoteCounter">95</p>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Pay for someone’s meal at the drive-through</h5>
-                            <p class="card-text">Millions of Americans barely have enough money to eat, give them a favor and pay for their meal</p>
-                            <a href="#" class="btn btn-dark">Associated Link</a>
-                        </div>
-                    </li>
-                    <br>
-                </div>
-            </ul>
+                            <input type="text" name="ideaID" value="" style="display: none;"></input>
+                            <input type="text" name="voteValue" value="" style="display: none;"></input>
+                            <p class="ideaVoteCounter" id="counter0"></p>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title"></h5>
+                        <p class="card-text"></p>
+                    </div>
+                </li>
+                <br>
+            </div>
         </main>
         <!-- jquery scripts for bootstrap -->
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
