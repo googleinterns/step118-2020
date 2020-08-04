@@ -32,6 +32,11 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
  
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
  
 import com.google.gson.Gson;
  
@@ -96,7 +101,10 @@ public class CommentServlet extends HttpServlet {
         if (userComments == null || userComments.isEmpty()) {
             userComments = new ArrayList<>();
         }
+
+        String timestamp = new SimpleDateFormat("HH.mm.ss").format(new Date());
         
+        userComments.add(0, timestamp);
         userComments.add(0, newComment);
 
         currentDeed.setProperty(COMMENTS_PROPERTY, userComments);

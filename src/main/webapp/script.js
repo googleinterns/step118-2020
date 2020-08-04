@@ -83,8 +83,8 @@ function getComments() {
         const commentsListElement = document.getElementById('comment-container');
         commentsListElement.innerHTML = '';
  
-        for (x in userComments) {
-            commentsListElement.appendChild(createComment(userComments[x]));
+        for(i = 0; i < userComments.length; i = i + 2) {
+            commentsListElement.appendChild(createComment(userComments[i], userComments[i+1]));
         }
         
     });
@@ -93,12 +93,14 @@ function getComments() {
 /**
  * creates a styled comment box to display on the web page
  */
-function createComment(text) {
+function createComment(text, time) {
     var commentBox = document.getElementById("commentTemplate").cloneNode(true);
     comment = sanitizeString(text);
 
-    commentBox.getElementsByTagName("p")[0].innerHTML = "User's Name Here";
-    commentBox.getElementsByTagName("img")[0].src = getProfilePicture();
+    var userData = getProfilePicture();
+
+    commentBox.getElementsByTagName("p")[0].innerHTML = userData['1']+" - "+time;
+    commentBox.getElementsByTagName("img")[0].src = userData['0'];
     commentBox.getElementsByTagName("p")[1].innerHTML = comment;
     
 
@@ -118,12 +120,20 @@ function sanitizeString(string) {
  * Provides a profile picture for users that do not have one
  */
 function getProfilePicture() {
+    var userData = new Object();
+    const index = Math.round(Math.random()*6);
+
     const pictures = ["/images/profile_pictures/blathers.jpg", 
     "/images/profile_pictures/isabelle.jpg", "/images/profile_pictures/kk.jpg",
     "/images/profile_pictures/timmy.jpg", "/images/profile_pictures/tommy.jpg",
     "/images/profile_pictures/tomnook.jpg"];
 
-    return pictures[Math.round(Math.random()*6)];
+    const names = ["Blathers", "Isabelle", "KK", "Timmy", "Tommy", "Tom Nook"];
+
+    userData['0'] = pictures[index];
+    userData['1'] = names[index];
+
+    return userData;
 }
 
 async function getLink() {
