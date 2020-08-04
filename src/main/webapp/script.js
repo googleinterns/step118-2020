@@ -121,7 +121,7 @@ function sanitizeString(string) {
  */
 function getProfilePicture() {
     var userData = new Object();
-    const index = Math.round(Math.random()*6);
+    const index = Math.round(Math.random()*5);
 
     const pictures = ["/images/profile_pictures/blathers.jpg", 
     "/images/profile_pictures/isabelle.jpg", "/images/profile_pictures/kk.jpg",
