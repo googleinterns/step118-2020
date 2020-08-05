@@ -10,6 +10,9 @@ of the survey input tab*/
 .surveyBackground {
     background-color:#e8e8e8;
 }
+.pastBackground {
+    background-image: linear-gradient(141deg, #ffc75f, #d65db1)
+}
 
 /*Matches the color of the tab background
 and makes the border transparent for form where 
@@ -30,6 +33,12 @@ users enter their ideas*/
     align-items: center;
     justify-content: center;
     height: 95vh;
+}
+.landing-past-deeds {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 95vh;
 }
 
 .link {
