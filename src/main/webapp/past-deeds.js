@@ -12,6 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+function onLoad() {
+    authInitializeFirebase();
+    authCheckLogin(false);
+    displayPastDeeds();
+}
+
 async function displayPastDeeds() {
     const DEED_LIST = "deed-list";
     const DEED_URL = "/ghost-of-deeds-past";
