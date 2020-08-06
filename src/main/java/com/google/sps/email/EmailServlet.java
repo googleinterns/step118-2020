@@ -140,7 +140,7 @@ public class EmailServlet extends HttpServlet {
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-        Query query = new Query("User");
+        Query query = new Query("Profile");
         PreparedQuery prep_query = datastore.prepare(query);
 
         for (Entity user : prep_query.asIterable()) {

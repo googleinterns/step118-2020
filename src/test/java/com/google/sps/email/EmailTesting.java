@@ -58,7 +58,7 @@ import com.google.sps.testing.GoodDeed;
 public class EmailTesting {
     private EmailServlet emailServlet;
 
-    private static final String USER = "User";
+    private static final String USER = "Profile";
     private static final String EMAIL = "email";
     private static final String EMAIL_INPUT = "test@gmail.com";
     private static final String EMAIL_SUBJECT = "Complete your daily deed";
